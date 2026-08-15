@@ -1,4 +1,4 @@
-# dsh-git-panel — Git 面板（DeepSeek Harness WebUI 插件）
+# dsh-git-component — Git 面板（DeepSeek Harness WebUI 插件）
 
 > DeepSeek Harness Web GUI 的 Git 插件：悬浮在窗口右侧的面板，实时查看当前更改（已暂存 / 未暂存 / 未跟踪），支持提交、提交并推送、推送，提交信息留空时自动用 AI 生成。
 >
@@ -19,18 +19,18 @@
 从 GitHub（git 源，推荐）：
 
 ```sh
-dsh plugin --profile web add github:nieyunliang/dsh-git-panel
+dsh plugin --profile web add github:nieyunliang/dsh-git-component
 ```
 
 从本地源码目录（开发/测试，需在插件父目录执行）：
 
 ```sh
-dsh plugin --profile web add ./dsh-git-panel
+dsh plugin --profile web add ./dsh-git-component
 ```
 
 > `dsh plugin add` 会自动把声明了 `dsh.bundle.patch` 的包加入该 profile 的
 > `dsh.profile.bundles` 层（即 `dsh plugin --profile web --dump-config` 里能看到
-> `git-panel` 这一行）。之后**重启** webui 进程生效（Node 模块缓存不会热替换旧代码）。
+> `git-component` 这一行）。之后**重启** webui 进程生效（Node 模块缓存不会热替换旧代码）。
 >
 > 注意：git 源安装需要 pnpm 允许构建脚本（`prepare`），如被拦截请按 pnpm 提示在
 > profile 的 `pnpm-workspace.yaml` 的 `allowBuilds` 中加入对应 key 后重试。
@@ -49,7 +49,7 @@ dsh plugin --profile web add ./dsh-git-panel
 ## 安全说明 / Security
 
 - git 命令在**当前会话工作目录**下执行（自动 `git rev-parse --show-toplevel` 定位仓库根）
-- 面板调用宿主 `/git-panel/*` 路由，宿主侧按会话沙箱策略执行；不会放宽你当前的文件权限模式
+- 面板调用宿主 `/git-component/*` 路由，宿主侧按会话沙箱策略执行；不会放宽你当前的文件权限模式
 - 仓库内执行的 git 操作与你在终端里敲等价命令的风险一致
 
 ## 原理 / How it works
@@ -58,16 +58,16 @@ dsh plugin --profile web add ./dsh-git-panel
 
 | 半 | 文件 | 机制 |
 |---|---|---|
-| Host 路由 | `index.js` | 包主入口；`inject: [webServer, shell]` 等 `webServer` 就绪后注册 `/git-panel/status\|diff\|commit\|push\|automessage` 五个 exact 路由 |
-| 浏览器面板 | `client.js` | `exports["./client"]` + `dsh.client.platform: web`，由 `dsh-client-modules` 扫描发现，经 `/plugins/git-panel/client.js` 注入页面，注册到 `shell.overlay` 插槽（id `git-panel`, order 90） |
+| Host 路由 | `index.js` | 包主入口；`inject: [webServer, shell]` 等 `webServer` 就绪后注册 `/git-component/status\|diff\|commit\|push\|automessage` 五个 exact 路由 |
+| 浏览器面板 | `client.js` | `exports["./client"]` + `dsh.client.platform: web`，由 `dsh-client-modules` 扫描发现，经 `/plugins/git-component/client.js` 注入页面，注册到 `shell.overlay` 插槽（id `git-component`, order 90） |
 
-`cordis.patch.yml` 是 bundle 层：profile 列出本 bundle 时插入一行 `git-panel`。
+`cordis.patch.yml` 是 bundle 层：profile 列出本 bundle 时插入一行 `git-component`。
 激活顺序由服务可用性驱动，`inject` 保证 `webServer`/`shell` 就绪后才 apply。
 
 ## 开发 / Development
 
 ```
-dsh-git-panel/
+dsh-git-component/
 ├── package.json        # dsh.bundle.patch + dsh.client 声明
 ├── cordis.patch.yml    # bundle 补丁层（一行 insert）
 ├── index.js            # Host 半：git 操作 + HTTP 路由（零依赖）
@@ -79,8 +79,8 @@ dsh-git-panel/
 修改后本地验证：
 
 ```sh
-dsh plugin --profile web add ./dsh-git-panel   # 重装（或先 remove）
-dsh --profile web --dump-config | grep git-panel # 确认行存在
+dsh plugin --profile web add ./dsh-git-component   # 重装（或先 remove）
+dsh --profile web --dump-config | grep git-component # 确认行存在
 # 重启 webui 进程
 ```
 

@@ -1,4 +1,4 @@
-// dsh-git-panel — Host half.
+// dsh-git-component — Host half.
 // Exposes git operations as HTTP routes consumed by the browser bundle
 // (./client.js, served via exports["./client"]). Zero runtime dependencies.
 const sq = (s) => "'" + String(s).replace(/'/g, "'\\''") + "'"
@@ -119,7 +119,7 @@ export default {
     const queryOf = (req) => new URL(req.url, 'http://dsh.local').searchParams
     const route = (path, handler) => ctx.effect(() => webServer.register({ kind: 'exact', path, handler }))
 
-    route('/git-panel/status', async (req, res) => {
+    route('/git-component/status', async (req, res) => {
       try {
         const cwd = queryOf(req).get('cwd') || ''
         const root = await resolveRepo(cwd)
@@ -136,7 +136,7 @@ export default {
       } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
     })
 
-    route('/git-panel/diff', async (req, res) => {
+    route('/git-component/diff', async (req, res) => {
       try {
         const q = queryOf(req)
         const cwd = q.get('cwd') || ''
@@ -160,7 +160,7 @@ export default {
       } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
     })
 
-    route('/git-panel/commit', async (req, res) => {
+    route('/git-component/commit', async (req, res) => {
       try {
         const body = await readBody(req)
         const cwd = typeof body.cwd === 'string' ? body.cwd : ''
@@ -179,7 +179,7 @@ export default {
       } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
     })
 
-    route('/git-panel/push', async (req, res) => {
+    route('/git-component/push', async (req, res) => {
       try {
         const body = await readBody(req)
         const cwd = typeof body.cwd === 'string' ? body.cwd : ''
@@ -193,7 +193,7 @@ export default {
     })
 
     // AI-generated commit message from the working-tree changes.
-    route('/git-panel/automessage', async (req, res) => {
+    route('/git-component/automessage', async (req, res) => {
       try {
         const body = await readBody(req)
         const cwd = typeof body.cwd === 'string' ? body.cwd : ''
@@ -235,7 +235,7 @@ export default {
           reasoningEffort: selection.reasoningEffort,
           system,
           messages: [{
-            id: 'git-panel-auto-msg',
+            id: 'git-component-auto-msg',
             role: 'user',
             content: [{ type: 'text', text: userPrompt }],
             source: { kind: 'user' },
@@ -260,6 +260,6 @@ export default {
       } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
     })
 
-    console.log('[git-panel] host plugin active: /git-panel/status /git-panel/diff /git-panel/commit /git-panel/push /git-panel/automessage')
+    console.log('[git-component] host plugin active: /git-component/status /git-component/diff /git-component/commit /git-component/push /git-component/automessage')
   },
 }
