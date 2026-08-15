@@ -1,0 +1,46 @@
+{
+  "name": "dsh-gitp",
+  "version": "0.1.0",
+  "description": "Git panel for the DeepSeek Harness Web GUI — floating right-side panel showing working-tree changes, inline diff viewer, commit & push, AI commit-message autofill.",
+  "license": "MIT",
+  "type": "module",
+  "main": "./index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "LICENSE",
+    "README.md"
+  ],
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "dsh-plugin",
+    "cordis",
+    "plugin",
+    "git",
+    "webui",
+    "web-ui",
+    "panel"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web"
+    }
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nieyunliang/dsh-gitp.git"
+  }
+}
