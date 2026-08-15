@@ -1,5 +1,5 @@
 {
-  "name": "dsh-gitp",
+  "name": "dsh-git-panel",
   "version": "0.1.0",
   "description": "Git panel for the DeepSeek Harness Web GUI — floating right-side panel showing working-tree changes, inline diff viewer, commit & push, AI commit-message autofill.",
   "license": "MIT",
@@ -41,6 +41,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nieyunliang/dsh-gitp.git"
+    "url": "git+https://github.com/nieyunliang/dsh-git-panel.git"
   }
 }

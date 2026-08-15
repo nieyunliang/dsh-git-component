@@ -1,4 +1,4 @@
-// dsh-gitp — Host half.
+// dsh-git-panel — Host half.
 // Exposes git operations as HTTP routes consumed by the browser bundle
 // (./client.js, served via exports["./client"]). Zero runtime dependencies.
 const sq = (s) => "'" + String(s).replace(/'/g, "'\\''") + "'"
@@ -119,7 +119,7 @@ export default {
     const queryOf = (req) => new URL(req.url, 'http://dsh.local').searchParams
     const route = (path, handler) => ctx.effect(() => webServer.register({ kind: 'exact', path, handler }))
 
-    route('/gitp/status', async (req, res) => {
+    route('/git-panel/status', async (req, res) => {
       try {
         const cwd = queryOf(req).get('cwd') || ''
         const root = await resolveRepo(cwd)
@@ -136,7 +136,7 @@ export default {
       } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
     })
 
-    route('/gitp/diff', async (req, res) => {
+    route('/git-panel/diff', async (req, res) => {
       try {
         const q = queryOf(req)
         const cwd = q.get('cwd') || ''
@@ -160,7 +160,7 @@ export default {
       } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
     })
 
-    route('/gitp/commit', async (req, res) => {
+    route('/git-panel/commit', async (req, res) => {
       try {
         const body = await readBody(req)
         const cwd = typeof body.cwd === 'string' ? body.cwd : ''
@@ -179,7 +179,7 @@ export default {
       } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
     })
 
-    route('/gitp/push', async (req, res) => {
+    route('/git-panel/push', async (req, res) => {
       try {
         const body = await readBody(req)
         const cwd = typeof body.cwd === 'string' ? body.cwd : ''
@@ -193,7 +193,7 @@ export default {
     })
 
     // AI-generated commit message from the working-tree changes.
-    route('/gitp/automessage', async (req, res) => {
+    route('/git-panel/automessage', async (req, res) => {
       try {
         const body = await readBody(req)
         const cwd = typeof body.cwd === 'string' ? body.cwd : ''
@@ -235,7 +235,7 @@ export default {
           reasoningEffort: selection.reasoningEffort,
           system,
           messages: [{
-            id: 'gitp-auto-msg',
+            id: 'git-panel-auto-msg',
             role: 'user',
             content: [{ type: 'text', text: userPrompt }],
             source: { kind: 'user' },
@@ -260,6 +260,6 @@ export default {
       } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
     })
 
-    console.log('[gitp] host plugin active: /gitp/status /gitp/diff /gitp/commit /gitp/push /gitp/automessage')
+    console.log('[git-panel] host plugin active: /git-panel/status /git-panel/diff /git-panel/commit /git-panel/push /git-panel/automessage')
   },
 }

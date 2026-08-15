@@ -1,16 +1,16 @@
-# dsh-gitp bundle layer — applied when a profile lists this bundle
+# dsh-git-panel bundle layer — applied when a profile lists this bundle
 # (package.json declares `dsh.bundle.patch` pointing at this file).
 #
-# The row id `gitp` is also the client-module id: the browser bundle is
-# served at /plugins/gitp/client.js via the package's `dsh.client`
+# The row id `git-panel` is also the client-module id: the browser bundle is
+# served at /plugins/git-panel/client.js via the package's `dsh.client`
 # declaration (exports["./client"]).
 #
 # `inject: [webServer, shell]` matters: profile activation is
 # service-availability driven, so without it this row could apply before
 # webServer/shell exist and silently no-op (no routes, no panel).
 - insert:
-    - id: gitp
-      name: dsh-gitp
+    - id: git-panel
+      name: dsh-git-panel
       inject:
         - webServer
         - shell
