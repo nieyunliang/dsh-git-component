@@ -192,6 +192,25 @@ export default {
       } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
     })
 
+    // Stage / unstage one file (used by the diff view's quick actions).
+    route('/git-component/stage', async (req, res) => {
+      try {
+        const body = await readBody(req)
+        const cwd = typeof body.cwd === 'string' ? body.cwd : ''
+        const path = typeof body.path === 'string' ? body.path : ''
+        const action = body.action === 'unstage' ? 'unstage' : 'stage'
+        if (!path) return send(res, 200, { ok: false, error: '缺少文件路径' })
+        const root = await resolveRepo(cwd)
+        if (root === null) return send(res, 200, { ok: false, error: '当前目录不是 Git 仓库' })
+        const policy = policyFor(root)
+        const command = action === 'unstage' ? 'restore --staged -- ' + sq(path) : 'add -- ' + sq(path)
+        const r = await runGit(cwd, command, { timeoutMs: 30000, stdoutMaxBytes: 512 * 1024, policy })
+        const out = ((r.stdout && r.stdout.text || '') + (r.stderr && r.stderr.text || '')).trim()
+        if (r.exitCode !== 0) return send(res, 200, { ok: false, error: out || (action === 'unstage' ? 'git restore 失败' : 'git add 失败') })
+        send(res, 200, { ok: true, output: out })
+      } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
+    })
+
     // AI-generated commit message from the working-tree changes.
     route('/git-component/automessage', async (req, res) => {
       try {

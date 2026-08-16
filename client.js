@@ -229,6 +229,47 @@ window.__ModuleLoader__.load({
   transition: color 0.12s ease, transform 0.12s ease;
 }
 .dsh-git-componentanel-root.collapsed:hover .dsh-git-componentanel-tab-icon { color: var(--dsw-alias-brand-primary, #2563eb); transform: scale(1.1); }
+.dsh-git-componentanel-diff-head { gap: 2px; }
+.dsh-git-componentanel-diff-head .dsh-git-componentanel-icobtn { width: 22px; height: 22px; font-size: 12px; flex: none; }
+.dsh-git-componentanel-hunk-head {
+  display: flex; align-items: center; gap: 6px;
+  padding: 3px 10px; cursor: pointer; user-select: none;
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px;
+  color: var(--dsw-alias-brand-primary, #2563eb);
+  background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 4%, transparent);
+  border-top: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
+}
+.dsh-git-componentanel-hunk-head:hover { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); }
+.dsh-git-componentanel-hunk-caret { font-size: 9px; flex: none; }
+.dsh-git-componentanel-hunk-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dsh-git-componentanel-diff-split { display: flex; flex-direction: column; }
+.dsh-git-componentanel-split-cols { display: flex; border-top: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); }
+.dsh-git-componentanel-split-col { flex: 1; min-width: 0; max-height: 260px; overflow: auto; }
+.dsh-git-componentanel-split-col + .dsh-git-componentanel-split-col { border-left: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent); }
+.dsh-git-componentanel-split-line {
+  display: flex; font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  font-size: 11.5px; line-height: 1.55; white-space: pre;
+}
+.dsh-git-componentanel-lineno {
+  flex: none; width: 34px; text-align: right; padding: 0 8px 0 4px;
+  color: var(--dsw-alias-label-secondary, #5b6472);
+  background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 3%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 6%, transparent);
+  user-select: none;
+}
+.dsh-git-componentanel-linebody { flex: 1; min-width: 0; padding: 0 8px; overflow: hidden; text-overflow: ellipsis; }
+.dsh-git-componentanel-split-line.add { background: color-mix(in srgb, var(--dsw-alias-state-success-primary, #16a34a) 11%, transparent); }
+.dsh-git-componentanel-split-line.del { background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #dc2626) 11%, transparent); }
+.dsh-git-componentanel-split-line.empty { background: transparent; }
+.dsh-git-componentanel-split-line.meta { color: var(--dsw-alias-label-secondary, #5b6472); font-style: italic; }
+.dsh-git-componentanel-tok.comment { color: var(--dsw-alias-label-secondary, #5b6472); font-style: italic; }
+.dsh-git-componentanel-tok.string { color: #0f9d58; }
+.dsh-git-componentanel-tok.keyword { color: #1a56db; font-weight: 600; }
+.dsh-git-componentanel-tok.number { color: #b45309; }
+body[data-ds-dark-theme] .dsh-git-componentanel-tok.string { color: #4ade80; }
+body[data-ds-dark-theme] .dsh-git-componentanel-tok.keyword { color: #7aa2f7; }
+body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 `;
 
 		function injectCss(css) {
@@ -253,6 +294,148 @@ window.__ModuleLoader__.load({
 			return r.json();
 		};
 
+		// ---- diff helpers: begin ----
+		const LANG_BY_EXT = {
+			js: "js", mjs: "js", cjs: "js", jsx: "jsx", ts: "ts", tsx: "tsx",
+			json: "json", html: "html", htm: "html", xml: "xml", svg: "xml",
+			css: "css", scss: "scss", md: "md", markdown: "md",
+			py: "py", rs: "rs", go: "go", java: "java", c: "c", h: "c",
+			cpp: "cpp", hpp: "cpp", cc: "cpp", sh: "sh", bash: "sh", zsh: "sh",
+			yml: "yml", yaml: "yml", toml: "toml", sql: "sql", vue: "jsx", svelte: "jsx"
+		};
+		const langOf = (path) => {
+			const m = /\.([A-Za-z0-9]+)$/.exec(String(path || ""));
+			return m ? LANG_BY_EXT[m[1].toLowerCase()] || null : null;
+		};
+		const JS_WORDS = "break case catch class const continue debugger default delete do else export extends false finally for from function get if import in instanceof let new null of return set static super switch this throw true try typeof undefined var void while with yield async await";
+		const TS_WORDS = JS_WORDS + " interface type enum namespace declare readonly abstract implements private protected public any unknown never string number boolean";
+		const LANG_SPECS = {
+			js: { line: ["//"], block: ["/*", "*/"], strings: ['"', "'", "`"], words: JS_WORDS },
+			jsx: { line: ["//"], block: ["/*", "*/"], strings: ['"', "'", "`"], words: JS_WORDS },
+			ts: { line: ["//"], block: ["/*", "*/"], strings: ['"', "'", "`"], words: TS_WORDS },
+			tsx: { line: ["//"], block: ["/*", "*/"], strings: ['"', "'", "`"], words: TS_WORDS },
+			json: { line: [], block: [], strings: ['"'], words: "true false null" },
+			html: { line: [], block: ["<!--", "-->"], strings: ['"', "'"], words: "" },
+			xml: { line: [], block: ["<!--", "-->"], strings: ['"', "'"], words: "" },
+			css: { line: [], block: ["/*", "*/"], strings: ['"', "'"], words: "important inherit initial unset" },
+			scss: { line: ["//"], block: ["/*", "*/"], strings: ['"', "'"], words: "important inherit initial unset" },
+			md: { line: [], block: ["<!--", "-->"], strings: [], words: "" },
+			py: { line: ["#"], block: [], strings: ["'''", '"""', "'", '"'], words: "and as assert async await break class continue def del elif else except False finally for from global if import in is lambda None nonlocal not or pass raise return True try while with yield" },
+			rs: { line: ["//"], block: ["/*", "*/"], strings: ['"', "'"], words: "as async await break const continue crate dyn else enum extern false fn for if impl in let loop match mod move mut pub ref return self Self static struct super trait true type unsafe use where while" },
+			go: { line: ["//"], block: ["/*", "*/"], strings: ['"', "'", "`"], words: "break case chan const continue default defer else fallthrough for func go goto if import interface map package range return select struct switch type var" },
+			java: { line: ["//"], block: ["/*", "*/"], strings: ['"', "'"], words: "abstract assert boolean break byte case catch char class const continue default do double else enum extends final finally float for goto if implements import instanceof int interface long native new package private protected public return short static strictfp super switch synchronized this throw throws transient try void volatile while true false null" },
+			c: { line: ["//"], block: ["/*", "*/"], strings: ['"', "'"], words: "auto break case char const continue default do double else enum extern float for goto if inline int long register restrict return short signed sizeof static struct switch typedef union unsigned void volatile while" },
+			cpp: { line: ["//"], block: ["/*", "*/"], strings: ['"', "'"], words: "auto break case char class const continue default delete do double else enum extern false float for friend goto if inline int long namespace new nullptr operator private protected public register return short signed sizeof static struct switch template this throw true try typedef typename union unsigned using virtual void volatile while" },
+			sh: { line: ["#"], block: [], strings: ['"', "'"], words: "if then else elif fi for while do done case esac function in return local export readonly unset set shift source echo exit" },
+			yml: { line: ["#"], block: [], strings: ['"', "'"], words: "true false null yes no on off" },
+			toml: { line: ["#"], block: [], strings: ['"', "'", '"""'], words: "true false" },
+			sql: { line: ["--"], block: ["/*", "*/"], strings: ["'", '"'], words: "select from where insert into values update delete create table index view alter drop add column primary key foreign references join inner left right full outer on as and or not null distinct group by order having limit offset union all case when then else end exists in like between is" }
+		};
+		/** Tokenize one diff line into [{text, cls}] for syntax highlighting. */
+		function tokenizeLine(text, lang) {
+			const spec = LANG_SPECS[lang];
+			if (spec === void 0) return [{ text: text, cls: "plain" }];
+			const out = [];
+			let pos = 0;
+			while (pos < text.length) {
+				const rest = text.slice(pos);
+				const lineComment = spec.line.length > 0 ? rest.indexOf(spec.line[0]) : -1;
+				const blockStart = spec.block.length > 0 ? rest.indexOf(spec.block[0]) : -1;
+				let strAt = -1;
+				let strChar = "";
+				for (const ch of spec.strings) {
+					const at = rest.indexOf(ch);
+					if (at !== -1 && (strAt === -1 || at < strAt)) { strAt = at; strChar = ch; }
+				}
+				const cands = [];
+				if (lineComment !== -1) cands.push({ at: lineComment, kind: "line" });
+				if (blockStart !== -1) cands.push({ at: blockStart, kind: "block" });
+				if (strAt !== -1) cands.push({ at: strAt, kind: "string" });
+				if (cands.length === 0) {
+					pushTokens(out, rest, spec.words);
+					break;
+				}
+				cands.sort((a, b) => a.at - b.at);
+				const next = cands[0];
+				if (next.at > 0) pushTokens(out, rest.slice(0, next.at), spec.words);
+				if (next.kind === "line") {
+					out.push({ text: rest.slice(next.at), cls: "comment" });
+					break;
+				}
+				if (next.kind === "block") {
+					const end = rest.indexOf(spec.block[1], next.at + spec.block[0].length);
+					if (end === -1) { out.push({ text: rest.slice(next.at), cls: "comment" }); break; }
+					out.push({ text: rest.slice(next.at, end + spec.block[1].length), cls: "comment" });
+					pos += next.at + (end - next.at) + spec.block[1].length;
+					continue;
+				}
+				let j = next.at + strChar.length;
+				while (j < rest.length) {
+					if (rest[j] === "\\") { j += 2; continue; }
+					if (rest.slice(j, j + strChar.length) === strChar) break;
+					j++;
+				}
+				const end = j < rest.length ? j + strChar.length : rest.length;
+				out.push({ text: rest.slice(next.at, end), cls: "string" });
+				pos += next.at + (end - next.at);
+			}
+			if (out.length === 0) out.push({ text: text, cls: "plain" });
+			return out;
+		}
+		/** Push keyword/number/plain tokens for a non-comment/non-string slice. */
+		function pushTokens(out, text, words) {
+			const wordRe = words.length > 0 ? "\\b(?:" + words.split(" ").join("|") + ")\\b" : "";
+			const re = new RegExp(wordRe + (wordRe ? "|" : "") + "\\b\\d[\\d_]*(?:\\.[\\d_]+)?(?:[eE][+-]?\\d+)?\\b", "g");
+			let last = 0;
+			let m;
+			while ((m = re.exec(text)) !== null) {
+				if (m.index > last) out.push({ text: text.slice(last, m.index), cls: "plain" });
+				// \b 边界已由正则保证；按首字符区分数字与关键字
+				out.push({ text: m[0], cls: /^\d/.test(m[0]) ? "number" : "keyword" });
+				last = m.index + m[0].length;
+			}
+			if (last < text.length) out.push({ text: text.slice(last), cls: "plain" });
+		}
+		/** Parse unified diff text into headers + hunks (line-capped). */
+		function parseUnifiedDiff(text, maxLines) {
+			const headers = [];
+			const hunks = [];
+			const lines = String(text || "").split("\n");
+			let cur = null;
+			let total = 0;
+			for (const ln of lines) {
+				const m = /^@@ -(\d+)(?:,(\d+))? \+(\d+)(?:,(\d+))? @@/.exec(ln);
+				if (m) {
+					if (total >= maxLines) { cur = null; continue; }
+					cur = { oldStart: Number(m[1]), oldCount: Number(m[2] || 1), newStart: Number(m[3]), newCount: Number(m[4] || 1), lines: [] };
+					hunks.push(cur);
+					continue;
+				}
+				if (cur === null) {
+					if (ln.startsWith("diff ") || ln.startsWith("index ") || ln.startsWith("---") || ln.startsWith("+++") || ln.startsWith("new file") || ln.startsWith("deleted file") || ln.startsWith("similarity") || ln.startsWith("rename")) headers.push(ln);
+					continue;
+				}
+				if (total >= maxLines) { cur = null; continue; }
+				total++;
+				if (ln.startsWith("+")) cur.lines.push({ kind: "add", text: ln.slice(1) });
+				else if (ln.startsWith("-")) cur.lines.push({ kind: "del", text: ln.slice(1) });
+				else if (ln.startsWith("\\")) cur.lines.push({ kind: "meta", text: ln });
+				else cur.lines.push({ kind: "ctx", text: ln });
+			}
+			return { headers: headers, hunks: hunks, truncated: total >= maxLines };
+		}
+		/** Align one hunk's lines into left/right pairs for side-by-side view. */
+		function sideBySidePairs(hunk) {
+			const pairs = [];
+			for (const ln of hunk.lines) {
+				if (ln.kind === "del") pairs.push({ left: ln.text, right: null, kind: "del" });
+				else if (ln.kind === "add") pairs.push({ left: null, right: ln.text, kind: "add" });
+				else pairs.push({ left: ln.text, right: ln.text, kind: ln.kind });
+			}
+			return pairs;
+		}
+		// ---- diff helpers: end ----
+
 		const GitPanel = (props) => {
 			const items = props.useWorkspaces((s) => s.items);
 			const recentId = props.useWorkspaces((s) => s.recentWorkspaceId);
@@ -266,6 +449,8 @@ window.__ModuleLoader__.load({
 			const [busy, setBusy] = React.useState(null);
 			const [message, setMessage] = React.useState("");
 			const [diff, setDiff] = React.useState(null);
+			const [splitView, setSplitView] = React.useState(false);
+			const [folded, setFolded] = React.useState({});
 			const [notice, setNotice] = React.useState(null);
 			const alive = React.useRef(true);
 
@@ -311,21 +496,48 @@ window.__ModuleLoader__.load({
 					setDiff(null);
 					return;
 				}
-				setDiff({ path: ch.path, text: null, error: null, loading: true });
+				setFolded({});
+				setDiff({ path: ch.path, text: null, error: null, loading: true, st: ch.state, parsed: null });
 				try {
 					const q = "cwd=" + encodeURIComponent(cwd) + "&path=" + encodeURIComponent(ch.path) + "&staged=" + (ch.state === "staged" ? "1" : "0") + "&untracked=" + (ch.state === "untracked" ? "1" : "0");
 					const res = await call("/git-component/diff?" + q);
 					if (!alive.current) return;
 					if (res && res.ok) {
-						setDiff({ path: ch.path, text: res.text, error: null, truncated: !!res.truncated, loading: false });
+						setDiff({ path: ch.path, text: res.text, error: null, truncated: !!res.truncated, loading: false, st: ch.state, parsed: parseUnifiedDiff(res.text, 400) });
 					} else {
-						setDiff({ path: ch.path, text: null, error: (res && res.error) || "无法读取差异", loading: false });
+						setDiff({ path: ch.path, text: null, error: (res && res.error) || "无法读取差异", loading: false, st: ch.state, parsed: null });
 					}
 				} catch (err) {
 					if (!alive.current) return;
-					setDiff({ path: ch.path, text: null, error: String((err && err.message) || err), loading: false });
+					setDiff({ path: ch.path, text: null, error: String((err && err.message) || err), loading: false, st: ch.state, parsed: null });
 				}
 			};
+
+			const runStage = async (d) => {
+				if (busy !== null || d.loading) return;
+				const action = d.st === "staged" ? "unstage" : "stage";
+				setBusy("stage");
+				setNotice(null);
+				try {
+					const res = await call("/git-component/stage", { cwd: cwd, path: d.path, action: action });
+					if (!alive.current) return;
+					if (res && res.ok) {
+						setNotice({ kind: "ok", text: (action === "unstage" ? "已取消暂存 " : "已暂存 ") + d.path });
+						setDiff(null);
+						setFolded({});
+						refresh(true);
+					} else {
+						setNotice({ kind: "err", text: (res && res.error) || (action === "unstage" ? "取消暂存失败" : "暂存失败") });
+					}
+				} catch (err) {
+					if (!alive.current) return;
+					setNotice({ kind: "err", text: String((err && err.message) || err) });
+				} finally {
+					if (alive.current) setBusy(null);
+				}
+			};
+
+			const toggleHunk = (hi) => setFolded((f) => Object.assign({}, f, { [hi]: !f[hi] }));
 
 			const runCommit = async (alsoPush) => {
 				if (busy !== null) return;
@@ -428,35 +640,102 @@ window.__ModuleLoader__.load({
 				);
 			};
 
-			const renderDiffLines = (d) => {
-				const lines = (d.text || "").split("\n");
-				const shown = lines.slice(0, 400);
-				const spans = shown.map((ln, i) => {
-					let cls = "dsh-git-componentanel-dl";
-					if (ln.startsWith("@@")) cls += " hunk";
-					else if (ln.startsWith("+")) cls += " add";
-					else if (ln.startsWith("-")) cls += " del";
-					else if (ln.startsWith("diff ") || ln.startsWith("index ") || ln.startsWith("---") || ln.startsWith("+++") || ln.startsWith("new file") || ln.startsWith("deleted file")) cls += " meta";
-					return h("span", { key: i, className: cls }, ln);
+			const renderLineTokens = (text, lang) => {
+				const tokens = tokenizeLine(text, lang);
+				return tokens.map((t, i) =>
+					t.cls === "plain" ? t.text : h("span", { key: i, className: "dsh-git-componentanel-tok " + t.cls }, t.text),
+				);
+			};
+
+			const renderHunkHead = (hk, hi, key) =>
+				h("div", { key: key, className: "dsh-git-componentanel-hunk-head", onClick: () => toggleHunk(hi), title: "折叠/展开该 hunk" },
+					h("span", { className: "dsh-git-componentanel-hunk-caret" }, folded[hi] ? "▶" : "▼"),
+					h("span", { className: "dsh-git-componentanel-hunk-label" }, "@@ -" + hk.oldStart + "," + hk.oldCount + " +" + hk.newStart + "," + hk.newCount + " @@"),
+				);
+
+			const renderUnified = (d) => {
+				const parsed = d.parsed;
+				const lang = langOf(d.path);
+				const nodes = [];
+				for (const hd of parsed.headers) nodes.push(h("span", { key: "hd" + nodes.length, className: "dsh-git-componentanel-dl meta" }, hd));
+				parsed.hunks.forEach((hk, hi) => {
+					nodes.push(renderHunkHead(hk, hi, "hh" + hi));
+					if (folded[hi]) return;
+					hk.lines.forEach((ln, i) => {
+						let cls = "dsh-git-componentanel-dl";
+						if (ln.kind === "add") cls += " add";
+						else if (ln.kind === "del") cls += " del";
+						else if (ln.kind === "meta") cls += " meta";
+						const prefix = ln.kind === "add" ? "+" : ln.kind === "del" ? "-" : "";
+						nodes.push(h("span", { key: "hl" + hi + "_" + i, className: cls }, prefix, renderLineTokens(ln.text, lang)));
+					});
 				});
-				if (lines.length > 400 || d.truncated) {
-					spans.push(h("span", { key: "trunc", className: "dsh-git-componentanel-dl meta" }, "… 差异过大，已截断"));
+				if (parsed.truncated || d.truncated) {
+					nodes.push(h("span", { key: "trunc", className: "dsh-git-componentanel-dl meta" }, "… 差异过大，已截断"));
 				}
-				return h("pre", { className: "dsh-git-componentanel-diff-pre" }, spans);
+				return h("div", { className: "dsh-git-componentanel-diff-pre" }, nodes);
+			};
+
+			const renderSplit = (d) => {
+				const parsed = d.parsed;
+				const lang = langOf(d.path);
+				if (parsed.hunks.length === 0) return renderUnified(d);
+				return h("div", { className: "dsh-git-componentanel-diff-split" },
+					parsed.hunks.map((hk, hi) => {
+						let oldNo = hk.oldStart;
+						let newNo = hk.newStart;
+						const pairs = sideBySidePairs(hk);
+						return h("div", { key: "h" + hi, className: "dsh-git-componentanel-hunk" },
+							renderHunkHead(hk, hi),
+							folded[hi]
+								? null
+								: h("div", { className: "dsh-git-componentanel-split-cols" },
+									h("div", { className: "dsh-git-componentanel-split-col" },
+										pairs.map((p, i) => h("div", { key: i, className: "dsh-git-componentanel-split-line" + (p.left === null ? " empty" : " " + p.kind) },
+											h("span", { className: "dsh-git-componentanel-lineno" }, p.left === null ? "" : String(oldNo++)),
+											h("span", { className: "dsh-git-componentanel-linebody" }, p.left === null ? "" : renderLineTokens(p.left, lang)),
+										)),
+									),
+									h("div", { className: "dsh-git-componentanel-split-col" },
+										pairs.map((p, i) => h("div", { key: i, className: "dsh-git-componentanel-split-line" + (p.right === null ? " empty" : " " + p.kind) },
+											h("span", { className: "dsh-git-componentanel-lineno" }, p.right === null ? "" : String(newNo++)),
+											h("span", { className: "dsh-git-componentanel-linebody" }, p.right === null ? "" : renderLineTokens(p.right, lang)),
+										)),
+									),
+								),
+						);
+					}),
+				);
 			};
 
 			const renderDiff = () => {
 				if (!diff) return null;
+				const st = diff.st;
+				const stageLabel = st === "staged" ? "取消暂存" : "暂存";
 				return h("div", { className: "dsh-git-componentanel-diff" },
 					h("div", { className: "dsh-git-componentanel-diff-head" },
-						h("span", { className: "dsh-git-componentanel-diff-path" }, diff.path),
+						h("span", { className: "dsh-git-componentanel-diff-path", title: diff.path }, diff.path),
+						h("button", {
+							className: "dsh-git-componentanel-icobtn",
+							onClick: () => setSplitView((v) => !v),
+							disabled: diff.loading || diff.error !== null,
+							title: splitView ? "单栏视图" : "分栏对比",
+							"aria-label": splitView ? "单栏视图" : "分栏对比",
+						}, splitView ? "▤" : "≡"),
+						h("button", {
+							className: "dsh-git-componentanel-icobtn",
+							onClick: () => runStage(diff),
+							disabled: busy !== null || diff.loading || diff.error !== null,
+							title: stageLabel,
+							"aria-label": stageLabel,
+						}, st === "staged" ? "↩" : "+"),
 						h("button", { className: "dsh-git-componentanel-icobtn", onClick: () => setDiff(null), title: "关闭差异", "aria-label": "关闭差异" }, "✕"),
 					),
 					diff.loading
 						? h("div", { className: "dsh-git-componentanel-empty" }, "读取差异中…")
 						: diff.error
 							? h("div", { className: "dsh-git-componentanel-errorbox" }, diff.error)
-							: renderDiffLines(diff),
+							: splitView ? renderSplit(diff) : renderUnified(diff),
 				);
 			};
 
