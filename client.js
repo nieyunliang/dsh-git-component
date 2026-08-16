@@ -118,6 +118,10 @@ window.__ModuleLoader__.load({
 .dsh-git-componentanel-diff {
   border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent);
   border-radius: 12px; overflow: hidden;
+  /* flex 压缩陷阱：body 是 flex column，overflow 非 visible 的 flex 子项
+     min-height:auto 解析为 0，空间不足时会被压扁并裁掉内容；
+     禁止收缩，高度由内容决定，滚动交给 body。 */
+  flex: none;
   background: transparent;
 }
 .dsh-git-componentanel-diff-head {
