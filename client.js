@@ -13,7 +13,8 @@ window.__ModuleLoader__.load({
   z-index: 2147483647; pointer-events: auto;
   display: flex; flex-direction: column;
   border-radius: 18px;
-  background: transparent;
+  /* 跟随主题：浅色模式纯白（rgb(255,255,255)），深色模式近黑（rgb(21,21,23)） */
+  background: var(--dsw-alias-bg-base, #ffffff);
   color: var(--dsw-alias-label-primary, #16181d);
   border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 18%, transparent);
   box-shadow:
