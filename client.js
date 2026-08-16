@@ -1,5 +1,5 @@
 window.__ModuleLoader__.load({
-	id: "dsh-git-component-client",
+	id: "dsh-git-component",
 	factory: (require) => {
 		var module = { exports: {} };
 		var exports = module.exports;
@@ -564,7 +564,7 @@ window.__ModuleLoader__.load({
 			));
 		}
 
-		exports.name = "dsh-git-component-client";
+		exports.name = "dsh-git-component";
 		exports.apply = apply;
 		return module.exports;
 	}

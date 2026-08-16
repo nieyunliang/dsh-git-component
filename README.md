@@ -59,7 +59,7 @@ dsh plugin --profile web add ./dsh-git-component
 | 半 | 文件 | 机制 |
 |---|---|---|
 | Host 路由 | `index.js` | 包主入口；`inject: [webServer, shell]` 等 `webServer` 就绪后注册 `/git-component/status\|diff\|commit\|push\|automessage` 五个 exact 路由 |
-| 浏览器面板 | `client.js` | `exports["./client"]` + `dsh.client.platform: web`，由 `dsh-client-modules` 扫描发现，经 `/plugins/git-component/client.js` 注入页面，注册到 `shell.overlay` 插槽（id `git-component`, order 90） |
+| 浏览器面板 | `client.js` | `exports["./client"]` + `dsh.client.platform: web`，由 `dsh-client-modules` 扫描发现，经 `/plugins/dsh-git-component/client.js` 注入页面（client-modules 以 loader entry name 为 id），注册到 `shell.overlay` 插槽（id `git-component`, order 90） |
 
 `cordis.patch.yml` 是 bundle 层：profile 列出本 bundle 时插入一行 `git-component`。
 激活顺序由服务可用性驱动，`inject` 保证 `webServer`/`shell` 就绪后才 apply。
