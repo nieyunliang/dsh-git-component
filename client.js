@@ -299,10 +299,10 @@ window.__ModuleLoader__.load({
 				setDiff(null);
 				setNotice(null);
 				refresh(true);
-				const timer = ctx.get("timer");
-				let d = null;
-				if (timer !== undefined) d = timer.interval(() => refresh(true), 15000);
-				return () => { alive.current = false; if (d) d(); };
+				// 浏览器原生定时器：组件位于工厂顶层作用域，无法访问 apply 的 ctx
+				// （client 侧亦无 timer 服务），故用 setInterval + cleanup 清理。
+				const d = setInterval(() => refresh(true), 15000);
+				return () => { alive.current = false; clearInterval(d); };
 			}, [refresh]);
 
 			const toggleDiff = async (ch) => {
