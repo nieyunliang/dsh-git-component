@@ -9,7 +9,9 @@ window.__ModuleLoader__.load({
 .dsh-git-componentanel-root, .dsh-git-componentanel-root * { box-sizing: border-box; }
 .dsh-git-componentanel-root {
   position: fixed; top: 84px; right: 14px; bottom: auto;
-  width: 376px; height: calc(50vh - 56px);
+  width: 376px;
+  min-height: 240px;
+  max-height: calc(100vh - 108px);
   z-index: 2147483647; pointer-events: auto;
   display: flex; flex-direction: column;
   border-radius: 18px;
@@ -24,6 +26,9 @@ window.__ModuleLoader__.load({
   overflow: hidden;
   font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   animation: dsh-git-componentanel-in 0.22s cubic-bezier(0.21, 1.02, 0.73, 1);
+}
+.dsh-git-componentanel-root.has-diff {
+  width: min(720px, calc(100vw - 28px));
 }
 @keyframes dsh-git-componentanel-in {
   from { opacity: 0; transform: translateX(16px) scale(0.98); }
@@ -64,11 +69,26 @@ window.__ModuleLoader__.load({
 @keyframes dsh-git-componentanel-spin { to { transform: rotate(360deg); } }
 .dsh-git-componentanel-icobtn:disabled { opacity: 0.45; cursor: default; }
 .dsh-git-componentanel-body {
-  flex: 1; overflow-y: auto; padding: 8px 10px 10px;
+  flex: 1; min-height: 0; overflow-y: auto; padding: 8px 10px 10px;
   display: flex; flex-direction: column; gap: 10px;
+}
+.dsh-git-componentanel-body.has-diff {
+  flex-direction: row;
+  align-items: stretch;
+  overflow: hidden;
+}
+.dsh-git-componentanel-files {
+  flex: 0 0 190px; min-width: 0;
+  display: flex; flex-direction: column; gap: 10px;
+  overflow-y: auto; padding-right: 2px;
 }
 .dsh-git-componentanel-body::-webkit-scrollbar { width: 8px; }
 .dsh-git-componentanel-body::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 16%, transparent);
+  border-radius: 8px; border: 2px solid transparent; background-clip: content-box;
+}
+.dsh-git-componentanel-files::-webkit-scrollbar { width: 8px; }
+.dsh-git-componentanel-files::-webkit-scrollbar-thumb {
   background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 16%, transparent);
   border-radius: 8px; border: 2px solid transparent; background-clip: content-box;
 }
@@ -124,6 +144,14 @@ window.__ModuleLoader__.load({
   flex: none;
   background: transparent;
 }
+.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-diff {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
 .dsh-git-componentanel-diff-head {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   padding: 6px 10px; font-size: 11px; color: var(--dsw-alias-label-secondary, #5b6472);
@@ -139,6 +167,11 @@ window.__ModuleLoader__.load({
 }
 .dsh-git-componentanel-diff-pre::-webkit-scrollbar { width: 8px; height: 8px; }
 .dsh-git-componentanel-diff-pre::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 16%, transparent); border-radius: 8px; }
+.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-diff-pre {
+  flex: 1 1 auto;
+  max-height: none;
+  min-height: 0;
+}
 .dsh-git-componentanel-dl { display: block; padding: 0 10px; white-space: pre; color: var(--dsw-alias-label-primary, #16181d); }
 .dsh-git-componentanel-dl.add { background: color-mix(in srgb, var(--dsw-alias-state-success-primary, #16a34a) 11%, transparent); color: var(--dsw-alias-state-success-primary, #16a34a); }
 .dsh-git-componentanel-dl.del { background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #dc2626) 11%, transparent); color: var(--dsw-alias-state-error-primary, #dc2626); }
@@ -250,6 +283,18 @@ window.__ModuleLoader__.load({
 .dsh-git-componentanel-diff-split { display: flex; flex-direction: column; }
 .dsh-git-componentanel-split-cols { display: flex; border-top: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); }
 .dsh-git-componentanel-split-col { flex: 1; min-width: 0; max-height: 260px; overflow: auto; }
+.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-diff-split {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+}
+.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-split-cols,
+.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-split-col {
+  max-height: none;
+}
+.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-split-col {
+  overflow: visible;
+}
 .dsh-git-componentanel-split-col + .dsh-git-componentanel-split-col { border-left: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent); }
 .dsh-git-componentanel-split-line {
   display: flex; font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
@@ -743,6 +788,7 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 				);
 			};
 
+			const hasDiff = diff !== null && status !== null && total > 0 && !error;
 			let body;
 			if (loading && !status && !error) {
 				body = h("div", { className: "dsh-git-componentanel-body" }, h("div", { className: "dsh-git-componentanel-empty" }, h("div", { className: "dsh-git-componentanel-big" }, "…"), "正在读取 Git 状态"));
@@ -754,10 +800,13 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 			} else if (status && total === 0) {
 				body = h("div", { className: "dsh-git-componentanel-body" }, h("div", { className: "dsh-git-componentanel-empty" }, h("div", { className: "dsh-git-componentanel-big" }, "✓"), "工作区干净，没有未提交的更改"));
 			} else {
-				body = h("div", { className: "dsh-git-componentanel-body" },
+				const sections = [
 					renderSection("已暂存", staged, "staged"),
 					renderSection("未暂存", unstaged, "unstaged"),
 					renderSection("未跟踪", untracked, "untracked"),
+				];
+				body = h("div", { className: "dsh-git-componentanel-body" + (hasDiff ? " has-diff" : "") },
+					hasDiff ? h("div", { className: "dsh-git-componentanel-files" }, sections) : sections,
 					renderDiff(),
 				);
 			}
@@ -781,7 +830,7 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 				: "";
 			const branchName = status ? (status.detached ? "HEAD (游离)" : status.branch) : "—";
 
-			return h("div", { className: "dsh-git-componentanel-root" },
+			return h("div", { className: "dsh-git-componentanel-root" + (hasDiff ? " has-diff" : "") },
 				h("div", { className: "dsh-git-componentanel-header" },
 					h("span", { className: "dsh-git-componentanel-logo", title: "Git 面板" },
 						h(BranchIcon, { width: 14, height: 14 }),
