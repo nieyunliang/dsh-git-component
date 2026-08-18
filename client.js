@@ -8,7 +8,7 @@ window.__ModuleLoader__.load({
 		const CSS = `
 .dsh-git-componentanel-root, .dsh-git-componentanel-root * { box-sizing: border-box; }
 .dsh-git-componentanel-root {
-  position: fixed; top: 84px; right: 14px; bottom: auto;
+  position: fixed; top: 0; right: 14px; bottom: auto;
   width: 376px;
   min-height: 240px;
   max-height: calc(100vh - 108px);
@@ -249,16 +249,25 @@ window.__ModuleLoader__.load({
 .dsh-git-componentanel-notice.err { color: var(--dsw-alias-state-error-primary, #dc2626); }
 .dsh-git-componentanel-notice.info { color: var(--dsw-alias-label-secondary, #5b6472); }
 .dsh-git-componentanel-root.collapsed {
-  top: 80px; bottom: auto; right: 20px;
   transform: none;
-  width: 44px; height: 44px;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  border-radius: 0;
+  width: 42px; height: 42px;
+  background: var(--dsw-alias-bg-base, #ffffff);
+  border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 18%, transparent);
+  border-radius: 13px;
+  box-shadow:
+    0 1px 3px -1px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 6%, transparent),
+    0 6px 16px -8px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 12%, transparent);
   animation: none; cursor: pointer;
   align-items: center; justify-content: center;
   padding: 0;
+  transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
+}
+.dsh-git-componentanel-root.collapsed:hover {
+  transform: translateY(-1px);
+  border-color: color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 45%, transparent);
+  box-shadow:
+    0 2px 4px -1px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 8%, transparent),
+    0 10px 24px -10px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 16%, transparent);
 }
 .dsh-git-componentanel-tab-icon {
   display: inline-flex;
@@ -266,6 +275,18 @@ window.__ModuleLoader__.load({
   transition: color 0.12s ease, transform 0.12s ease;
 }
 .dsh-git-componentanel-root.collapsed:hover .dsh-git-componentanel-tab-icon { color: var(--dsw-alias-brand-primary, #2563eb); transform: scale(1.1); }
+.dsh-git-componentanel-tab-badge {
+  position: absolute; top: -4px; right: -4px;
+  min-width: 16px; height: 16px; padding: 0 4px;
+  border-radius: 999px;
+  background: var(--dsw-alias-state-error-primary, #dc2626);
+  color: #fff;
+  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-size: 10px; font-weight: 700; line-height: 16px;
+  display: inline-flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 0 2px var(--dsw-alias-bg-base, #ffffff);
+  pointer-events: none;
+}
 .dsh-git-componentanel-diff-head { gap: 2px; }
 .dsh-git-componentanel-diff-head .dsh-git-componentanel-icobtn { width: 22px; height: 22px; font-size: 12px; flex: none; }
 .dsh-git-componentanel-hunk-head {
@@ -494,7 +515,7 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 			const [status, setStatus] = React.useState(null);
 			const [error, setError] = React.useState(null);
 			const [loading, setLoading] = React.useState(true);
-			const [collapsed, setCollapsed] = React.useState(false);
+			const [collapsed, setCollapsed] = React.useState(true);
 			const [busy, setBusy] = React.useState(null);
 			const [message, setMessage] = React.useState("");
 			const [diff, setDiff] = React.useState(null);
@@ -820,9 +841,10 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 						tabIndex: 0,
 						"aria-label": "展开 Git 面板",
 						title: "展开 Git 面板",
-					},
-					h(BranchIcon, { className: "dsh-git-componentanel-tab-icon", width: 20, height: 20 }),
-				);
+				},
+				h(BranchIcon, { className: "dsh-git-componentanel-tab-icon", width: 20, height: 20 }),
+				total > 0 ? h("span", { className: "dsh-git-componentanel-tab-badge" }, total > 99 ? "99+" : String(total)) : null,
+			);
 			}
 
 			const branchMeta = status
