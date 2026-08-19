@@ -10,21 +10,48 @@ window.__ModuleLoader__.load({
 .dsh-git-component-panel-root {
   --dsh-git-component-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
   --dsh-git-component-font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  --dsh-border: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 18%, transparent);
+  --dsh-border-weak: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
+  --dsh-border-faint: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 6%, transparent);
+  --dsh-border-very-faint: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent);
+  --dsh-border-strong: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 22%, transparent);
+  --dsh-border-input: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 12%, transparent);
+  --dsh-border-focus: color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 70%, transparent);
+  --dsh-border-brand-hover: color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 45%, transparent);
+  --dsh-surface-soft: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 5%, transparent);
+  --dsh-surface-faint: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 4%, transparent);
+  --dsh-surface-code: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 3%, transparent);
+  --dsh-surface-count: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 6%, transparent);
+  --dsh-surface-badge: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 7%, transparent);
+  --dsh-surface-hover-soft: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 6%, transparent);
+  --dsh-surface-hover: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
+  --dsh-surface-active: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 9%, transparent);
+  --dsh-surface-btn: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent);
+  --dsh-scrollbar-thumb: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 16%, transparent);
+  --dsh-ring-focus: color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 20%, transparent);
+  --dsh-bg-input: color-mix(in srgb, var(--dsw-alias-bg-base, #ffffff) 60%, transparent);
+  --dsh-bg-input-focus: color-mix(in srgb, var(--dsw-alias-bg-base, #ffffff) 70%, transparent);
+  --dsh-shadow-panel:
+    0 1px 3px -1px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 6%, transparent),
+    0 6px 16px -8px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 10%, transparent),
+    0 14px 32px -16px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 8%, transparent);
+  --dsh-shadow-collapsed:
+    0 1px 3px -1px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 6%, transparent),
+    0 6px 16px -8px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 12%, transparent);
+  --dsh-shadow-collapsed-hover:
+    0 2px 4px -1px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 8%, transparent),
+    0 10px 24px -10px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 16%, transparent);
   position: fixed; top: 90px; right: 14px; bottom: auto;
   width: min(376px, calc(100vw - 28px));
-  max-height: calc(100vh - 108px);
+  max-height: max(240px, calc(100vh - 108px));
   z-index: 2147483647; pointer-events: auto;
   display: flex; flex-direction: column;
   border-radius: 18px;
   /* 跟随主题：浅色模式纯白（rgb(255,255,255)），深色模式近黑（rgb(21,21,23)） */
   background: var(--dsw-alias-bg-base, #ffffff);
   color: var(--dsw-alias-label-primary, #16181d);
-  border: 1px solid var(--dsw-alias-label-primary, #16181d);
-  border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 18%, transparent);
-  box-shadow:
-    0 1px 3px -1px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 6%, transparent),
-    0 6px 16px -8px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 10%, transparent),
-    0 14px 32px -16px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 8%, transparent);
+  border: 1px solid var(--dsh-border);
+  box-shadow: var(--dsh-shadow-panel);
   overflow: hidden;
   font: 14px/1.5 var(--dsh-git-component-font-sans);
   animation: dsh-git-component-panel-in 0.22s cubic-bezier(0.21, 1.02, 0.73, 1);
@@ -39,7 +66,7 @@ window.__ModuleLoader__.load({
 .dsh-git-component-panel-header {
   display: flex; align-items: center; gap: 8px;
   padding: 12px 14px 10px;
-  border-bottom: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
+  border-bottom: 1px solid var(--dsh-border-weak);
   background: transparent;
 }
 .dsh-git-component-panel-logo {
@@ -53,8 +80,8 @@ window.__ModuleLoader__.load({
   display: inline-flex; align-items: center; gap: 5px;
   font-family: var(--dsh-git-component-font-mono);
   font-size: 12px; color: var(--dsw-alias-label-secondary, #5b6472);
-  background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 5%, transparent);
-  border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent);
+  background: var(--dsh-surface-soft);
+  border: 1px solid var(--dsh-border-very-faint);
   border-radius: 999px; padding: 2px 10px;
   max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
@@ -64,14 +91,9 @@ window.__ModuleLoader__.load({
   border: none; background: transparent; color: var(--dsw-alias-label-secondary, #5b6472);
   width: 26px; height: 26px; border-radius: 8px; cursor: pointer; font-size: 14px; line-height: 1;
   display: inline-flex; align-items: center; justify-content: center; flex: none;
-  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
   transition: background 0.12s ease, color 0.12s ease;
 }
-.dsh-git-component-panel-icobtn:focus-visible {
-  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
-  outline-offset: 2px;
-}
-.dsh-git-component-panel-icobtn:hover { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); color: var(--dsw-alias-label-primary, #16181d); }
+.dsh-git-component-panel-icobtn:hover { background: var(--dsh-surface-hover); color: var(--dsw-alias-label-primary, #16181d); }
 .dsh-git-component-panel-icobtn.loading { animation: dsh-git-component-panel-spin 0.9s linear infinite; }
 @keyframes dsh-git-component-panel-spin { to { transform: rotate(360deg); } }
 .dsh-git-component-panel-icobtn:disabled { opacity: 0.45; cursor: default; }
@@ -89,15 +111,17 @@ window.__ModuleLoader__.load({
   display: flex; flex-direction: column; gap: 10px;
   overflow-y: auto; padding-right: 2px;
 }
-.dsh-git-component-panel-body::-webkit-scrollbar { width: 8px; }
-.dsh-git-component-panel-body::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 16%, transparent);
+.dsh-git-component-panel-body::-webkit-scrollbar,
+.dsh-git-component-panel-files::-webkit-scrollbar { width: 8px; }
+.dsh-git-component-panel-diff-pre::-webkit-scrollbar { width: 8px; height: 8px; }
+.dsh-git-component-panel-body::-webkit-scrollbar-thumb,
+.dsh-git-component-panel-files::-webkit-scrollbar-thumb {
+  background: var(--dsh-scrollbar-thumb);
   border-radius: 8px; border: 2px solid transparent; background-clip: content-box;
 }
-.dsh-git-component-panel-files::-webkit-scrollbar { width: 8px; }
-.dsh-git-component-panel-files::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 16%, transparent);
-  border-radius: 8px; border: 2px solid transparent; background-clip: content-box;
+.dsh-git-component-panel-diff-pre::-webkit-scrollbar-thumb {
+  background: var(--dsh-scrollbar-thumb);
+  border-radius: 8px;
 }
 .dsh-git-component-panel-section-title {
   display: flex; align-items: center; gap: 6px;
@@ -108,7 +132,7 @@ window.__ModuleLoader__.load({
 .dsh-git-component-panel-section-title .dsh-git-component-panel-count {
   font-family: var(--dsh-git-component-font-mono); font-weight: 700; font-size: 10px;
   color: var(--dsw-alias-label-secondary, #5b6472);
-  background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 6%, transparent);
+  background: var(--dsh-surface-count);
   border-radius: 999px; padding: 0 6px;
 }
 .dsh-git-component-panel-row {
@@ -120,17 +144,13 @@ window.__ModuleLoader__.load({
   font: inherit; color: inherit; text-align: left;
   content-visibility: auto; contain-intrinsic-size: 34px;
 }
-.dsh-git-component-panel-row:focus-visible {
-  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
-  outline-offset: -2px;
-}
-.dsh-git-component-panel-row:hover { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 6%, transparent); }
-.dsh-git-component-panel-row.active { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 9%, transparent); }
+.dsh-git-component-panel-row:hover { background: var(--dsh-surface-hover-soft); }
+.dsh-git-component-panel-row.active { background: var(--dsh-surface-active); }
 .dsh-git-component-panel-badge {
   flex: none; width: 20px; height: 20px; border-radius: 6px;
   display: inline-flex; align-items: center; justify-content: center;
   font-family: var(--dsh-git-component-font-mono); font-size: 11px; font-weight: 700;
-  background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 7%, transparent);
+  background: var(--dsh-surface-badge);
   color: var(--dsw-alias-label-secondary, #5b6472);
 }
 .dsh-git-component-panel-badge.staged {
@@ -150,7 +170,7 @@ window.__ModuleLoader__.load({
 .dsh-git-component-panel-caret { color: var(--dsw-alias-label-secondary, #5b6472); font-size: 10px; flex: none; transition: transform 0.15s ease; }
 .dsh-git-component-panel-row.open .dsh-git-component-panel-caret { transform: rotate(90deg); }
 .dsh-git-component-panel-diff {
-  border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent);
+  border: 1px solid var(--dsh-border-very-faint);
   border-radius: 12px; overflow: hidden;
   /* flex 压缩陷阱：body 是 flex column，overflow 非 visible 的 flex 子项
      min-height:auto 解析为 0，空间不足时会被压扁并裁掉内容；
@@ -170,7 +190,7 @@ window.__ModuleLoader__.load({
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   padding: 6px 10px; font-size: 11px; color: var(--dsw-alias-label-secondary, #5b6472);
   font-family: var(--dsh-git-component-font-mono);
-  border-bottom: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
+  border-bottom: 1px solid var(--dsh-border-weak);
   background: transparent;
 }
 .dsh-git-component-panel-diff-path { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -179,8 +199,6 @@ window.__ModuleLoader__.load({
   font-family: var(--dsh-git-component-font-mono);
   font-size: 11.5px; line-height: 1.55; tab-size: 4;
 }
-.dsh-git-component-panel-diff-pre::-webkit-scrollbar { width: 8px; height: 8px; }
-.dsh-git-component-panel-diff-pre::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 16%, transparent); border-radius: 8px; }
 .dsh-git-component-panel-body.has-diff .dsh-git-component-panel-diff-pre {
   flex: 1 1 auto;
   max-height: none;
@@ -189,7 +207,7 @@ window.__ModuleLoader__.load({
 .dsh-git-component-panel-dl { display: block; padding: 0 10px; white-space: pre; color: var(--dsw-alias-label-primary, #16181d); }
 .dsh-git-component-panel-dl.add { background: color-mix(in srgb, var(--dsw-alias-state-success-primary, #16a34a) 11%, transparent); color: #166534; }
 .dsh-git-component-panel-dl.del { background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #dc2626) 11%, transparent); color: #b91c1c; }
-.dsh-git-component-panel-dl.hunk { color: var(--dsw-alias-brand-primary, #2563eb); background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 4%, transparent); }
+.dsh-git-component-panel-dl.hunk { color: var(--dsw-alias-brand-primary, #2563eb); background: var(--dsh-surface-faint); }
 .dsh-git-component-panel-dl.meta { color: var(--dsw-alias-label-secondary, #5b6472); font-style: italic; }
 .dsh-git-component-panel-empty {
   text-align: center; color: var(--dsw-alias-label-secondary, #5b6472);
@@ -204,7 +222,7 @@ window.__ModuleLoader__.load({
   word-break: break-word;
 }
 .dsh-git-component-panel-commit {
-  border-top: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
+  border-top: 1px solid var(--dsh-border-weak);
   padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px;
   background: transparent;
 }
@@ -214,21 +232,17 @@ window.__ModuleLoader__.load({
 }
 .dsh-git-component-panel-textarea {
   width: 100%; resize: none; min-height: 56px; max-height: 120px;
-  border: 1px solid var(--dsw-alias-label-primary, #16181d);
-  border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 12%, transparent);
+  border: 1px solid var(--dsh-border-input);
   border-radius: 12px;
-  background: var(--dsw-alias-bg-base, #ffffff);
-  background: color-mix(in srgb, var(--dsw-alias-bg-base, #ffffff) 60%, transparent);
-  backdrop-filter: blur(12px);
+  background: var(--dsh-bg-input);
   color: var(--dsw-alias-label-primary, #16181d);
   padding: 8px 11px; font: 12.5px/1.5 inherit; outline: none;
   transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
 }
 .dsh-git-component-panel-textarea:focus {
-  border-color: color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 70%, transparent);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 20%, transparent);
-  background: var(--dsw-alias-bg-base, #ffffff);
-  background: color-mix(in srgb, var(--dsw-alias-bg-base, #ffffff) 70%, transparent);
+  border-color: var(--dsh-border-focus);
+  box-shadow: 0 0 0 3px var(--dsh-ring-focus);
+  background: var(--dsh-bg-input-focus);
 }
 .dsh-git-component-panel-textarea::placeholder { color: var(--dsw-alias-label-secondary, #5b6472); }
 .dsh-git-component-panel-btns { display: flex; gap: 8px; }
@@ -236,12 +250,7 @@ window.__ModuleLoader__.load({
   flex: 1; min-height: 34px; border-radius: 11px; border: 1px solid transparent; cursor: pointer;
   padding: 6px 10px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em;
   display: inline-flex; align-items: center; justify-content: center;
-  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
   transition: filter 0.12s ease, background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
-}
-.dsh-git-component-panel-btn:focus-visible {
-  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
-  outline-offset: 2px;
 }
 .dsh-git-component-panel-btn:disabled { opacity: 0.45; cursor: default; }
 .dsh-git-component-panel-btn.primary {
@@ -252,8 +261,8 @@ window.__ModuleLoader__.load({
 .dsh-git-component-panel-btn.primary:not(:disabled):hover { filter: brightness(1.08); }
 .dsh-git-component-panel-btn.primary:not(:disabled):active { filter: brightness(0.94); }
 .dsh-git-component-panel-btn.outline {
-  background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent);
-  border-color: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 22%, transparent);
+  background: var(--dsh-surface-btn);
+  border-color: var(--dsh-border-strong);
   color: var(--dsw-alias-label-primary, #16181d);
 }
 .dsh-git-component-panel-btn.outline:not(:disabled):hover {
@@ -267,11 +276,6 @@ window.__ModuleLoader__.load({
   flex: none; border: none; background: transparent; cursor: pointer;
   color: var(--dsw-alias-label-secondary, #5b6472); font-size: 12px; font-weight: 600;
   padding: 2px 4px; border-radius: 6px;
-  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
-}
-.dsh-git-component-panel-push:focus-visible {
-  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
-  outline-offset: 2px;
 }
 .dsh-git-component-panel-push:hover { color: var(--dsw-alias-brand-primary, #2563eb); }
 .dsh-git-component-panel-push:disabled { opacity: 0.5; cursor: default; }
@@ -282,12 +286,11 @@ window.__ModuleLoader__.load({
 .dsh-git-component-panel-root.collapsed {
   transform: none;
   width: 42px; height: 42px;
+  overflow: visible;
   background: var(--dsw-alias-bg-base, #ffffff);
-  border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 18%, transparent);
+  border: 1px solid var(--dsh-border);
   border-radius: 13px;
-  box-shadow:
-    0 1px 3px -1px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 6%, transparent),
-    0 6px 16px -8px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 12%, transparent);
+  box-shadow: var(--dsh-shadow-collapsed);
   animation: none; cursor: pointer;
   align-items: center; justify-content: center;
   padding: 0;
@@ -295,14 +298,8 @@ window.__ModuleLoader__.load({
 }
 .dsh-git-component-panel-root.collapsed:hover {
   transform: translateY(-1px);
-  border-color: color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 45%, transparent);
-  box-shadow:
-    0 2px 4px -1px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 8%, transparent),
-    0 10px 24px -10px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 16%, transparent);
-}
-.dsh-git-component-panel-root.collapsed:focus-visible {
-  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
-  outline-offset: 2px;
+  border-color: var(--dsh-border-brand-hover);
+  box-shadow: var(--dsh-shadow-collapsed-hover);
 }
 .dsh-git-component-panel-tab-icon {
   display: inline-flex;
@@ -329,20 +326,16 @@ window.__ModuleLoader__.load({
   padding: 3px 10px; cursor: pointer; user-select: none;
   font-family: var(--dsh-git-component-font-mono); font-size: 11.5px;
   color: var(--dsw-alias-brand-primary, #2563eb);
-  background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 4%, transparent);
-  border-top: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
+  background: var(--dsh-surface-faint);
+  border-top: 1px solid var(--dsh-border-weak);
+  border-bottom: 1px solid var(--dsh-border-weak);
   border-left: none; border-right: none; width: 100%; text-align: left; appearance: none;
 }
-.dsh-git-component-panel-hunk-head:focus-visible {
-  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
-  outline-offset: -2px;
-}
-.dsh-git-component-panel-hunk-head:hover { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); }
+.dsh-git-component-panel-hunk-head:hover { background: var(--dsh-surface-hover); }
 .dsh-git-component-panel-hunk-caret { font-size: 9px; flex: none; }
 .dsh-git-component-panel-hunk-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dsh-git-component-panel-diff-split { display: flex; flex-direction: column; }
-.dsh-git-component-panel-split-cols { display: flex; border-top: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); }
+.dsh-git-component-panel-split-cols { display: flex; border-top: 1px solid var(--dsh-border-weak); }
 .dsh-git-component-panel-split-col { flex: 1; min-width: 0; max-height: 260px; overflow: auto; }
 .dsh-git-component-panel-body.has-diff .dsh-git-component-panel-diff-split {
   flex: 1 1 auto;
@@ -356,7 +349,7 @@ window.__ModuleLoader__.load({
 .dsh-git-component-panel-body.has-diff .dsh-git-component-panel-split-col {
   overflow: visible;
 }
-.dsh-git-component-panel-split-col + .dsh-git-component-panel-split-col { border-left: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent); }
+.dsh-git-component-panel-split-col + .dsh-git-component-panel-split-col { border-left: 1px solid var(--dsh-border-very-faint); }
 .dsh-git-component-panel-split-line {
   display: flex; font-family: var(--dsh-git-component-font-mono);
   font-size: 11.5px; line-height: 1.55; white-space: pre;
@@ -364,8 +357,8 @@ window.__ModuleLoader__.load({
 .dsh-git-component-panel-lineno {
   flex: none; width: 34px; text-align: right; padding: 0 8px 0 4px;
   color: var(--dsw-alias-label-secondary, #5b6472);
-  background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 3%, transparent);
-  border-right: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 6%, transparent);
+  background: var(--dsh-surface-code);
+  border-right: 1px solid var(--dsh-border-faint);
   user-select: none;
 }
 .dsh-git-component-panel-linebody { flex: 1; min-width: 0; padding: 0 8px; overflow: hidden; text-overflow: ellipsis; }
@@ -381,8 +374,21 @@ window.__ModuleLoader__.load({
 body[data-ds-dark-theme] .dsh-git-component-panel-tok.string { color: #4ade80; }
 body[data-ds-dark-theme] .dsh-git-component-panel-tok.keyword { color: #7aa2f7; }
 body[data-ds-dark-theme] .dsh-git-component-panel-tok.number { color: #fbbf24; }
+.dsh-git-component-panel-icobtn:focus-visible,
+.dsh-git-component-panel-btn:focus-visible,
+.dsh-git-component-panel-push:focus-visible,
+.dsh-git-component-panel-root.collapsed:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
+  outline-offset: 2px;
+}
+.dsh-git-component-panel-row:focus-visible,
+.dsh-git-component-panel-hunk-head:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
+  outline-offset: -2px;
+}
 @media (pointer: coarse) {
   .dsh-git-component-panel-icobtn { width: 44px; height: 44px; }
+  .dsh-git-component-panel-diff-head .dsh-git-component-panel-icobtn { width: 44px; height: 44px; }
   .dsh-git-component-panel-btn { min-height: 44px; }
   .dsh-git-component-panel-push { min-height: 44px; padding: 8px 12px; }
   .dsh-git-component-panel-row { min-height: 44px; }
@@ -415,6 +421,7 @@ body[data-ds-dark-theme] .dsh-git-component-panel-tok.number { color: #fbbf24; }
 .dsh-git-component-panel-split-col {
   overscroll-behavior: contain;
 }
+
 `;
 
 		function injectCss(css) {

@@ -1,6 +1,6 @@
 {
   "name": "dsh-git-component",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Git panel for the DeepSeek Harness Web GUI — floating right-side panel showing working-tree changes, inline diff viewer, commit & push, AI commit-message autofill.",
   "license": "MIT",
   "type": "module",
