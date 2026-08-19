@@ -9,7 +9,7 @@
 - 右侧悬浮面板（376px 宽，透明卡片风），可折叠为 Git 分支小图标
 - 三个分组：**已暂存 / 未暂存 / 未跟踪**（porcelain v1 精确解析，含重命名）
 - 点击文件内联查看 diff（最多 400 行）
-- 提交 / 提交并推送 / 推送
+- 提交 / 提交并推送 / 推送（提交前自动 `git add -A` 暂存全部更改）
 - 提交信息留空 → 自动用当前默认模型生成中文提交信息（≤60 字，单行）
 - 15 秒自动刷新；跟随当前会话的工作目录（切换会话/工作区自动重载）
 - 操作通过宿主 `shell` 执行 git，尊重沙箱策略；`GIT_TERMINAL_PROMPT=0` 禁止交互
@@ -32,8 +32,9 @@ dsh plugin --profile web add ./dsh-git-component
 > `dsh.profile.bundles` 层（即 `dsh plugin --profile web --dump-config` 里能看到
 > `git-component` 这一行）。之后**重启** webui 进程生效（Node 模块缓存不会热替换旧代码）。
 >
-> 注意：git 源安装需要 pnpm 允许构建脚本（`prepare`），如被拦截请按 pnpm 提示在
-> profile 的 `pnpm-workspace.yaml` 的 `allowBuilds` 中加入对应 key 后重试。
+> 注意：本插件没有构建脚本，git 源安装通常无需额外 `prepare`/`allowBuilds` 配置；
+> 若 pnpm 仍提示构建脚本被拦截，再按提示在 profile 的 `pnpm-workspace.yaml`
+> 的 `allowBuilds` 中加入对应 key 后重试。
 
 要求：`web` profile（提供 `webServer` 与 `shell` 服务）、Node ≥ 22、Git ≥ 2.x。
 插件零运行时依赖（不 import 任何包，直接消费 Cordis `ctx`）。
@@ -42,7 +43,7 @@ dsh plugin --profile web add ./dsh-git-component
 
 1. 重启后打开 WebUI，右侧出现 Git 面板（右上角小分支图标可展开/收起）
 2. 面板显示当前仓库的三个分组与变更文件；点击文件看 diff
-3. 提交：填入信息后点「提交」或「提交并推送」（Ctrl/⌘+Enter 提交）
+3. 提交：填入信息后点「提交」或「提交并推送」（Ctrl/⌘+Enter 提交）；提交前会自动暂存全部更改（`git add -A`）
 4. 留空提交信息：点提交后自动生成 AI 提交信息并提交
 5. 「推送」按钮推送当前分支到上游
 
@@ -58,8 +59,8 @@ dsh plugin --profile web add ./dsh-git-component
 
 | 半 | 文件 | 机制 |
 |---|---|---|
-| Host 路由 | `index.js` | 包主入口；`inject: [webServer, shell]` 等 `webServer` 就绪后注册 `/git-component/status\|diff\|commit\|push\|automessage` 五个 exact 路由 |
-| 浏览器面板 | `client.js` | `exports["./client"]` + `dsh.client.platform: web`，由 `dsh-client-modules` 扫描发现，经 `/plugins/dsh-git-component/client.js` 注入页面（client-modules 以 loader entry name 为 id），注册到 `shell.overlay` 插槽（id `git-component`, order 90） |
+| Host 路由 | `index.js` | 包主入口；`inject: [webServer, shell]` 等 `webServer` 就绪后注册 `/git-component/status\|diff\|commit\|push\|stage\|automessage` 六个 exact 路由 |
+| 浏览器面板 | `client.js` | `exports["./client"]` + `dsh.client.platform: web`，由 `dsh-client-modules` 扫描发现，经 `/plugins/dsh-git-component/client.js` 注入页面（client-modules 以 loader entry name `dsh-git-component` 为 id），注册到 `shell.overlay` 插槽（id `git-component`, order 90） |
 
 `cordis.patch.yml` 是 bundle 层：profile 列出本 bundle 时插入一行 `git-component`。
 激活顺序由服务可用性驱动，`inject` 保证 `webServer`/`shell` 就绪后才 apply。

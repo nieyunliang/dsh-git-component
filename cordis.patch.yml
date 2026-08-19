@@ -1,8 +1,9 @@
 # dsh-git-component bundle layer — applied when a profile lists this bundle
 # (package.json declares `dsh.bundle.patch` pointing at this file).
 #
-# The row id `git-component` is also the client-module id: the browser bundle is
-# served at /plugins/git-component/client.js via the package's `dsh.client`
+# The row id `git-component` is the loader-entry id; the client-module id is the
+# package name `dsh-git-component`. The browser bundle is served at
+# /plugins/dsh-git-component/client.js via the package's `dsh.client`
 # declaration (exports["./client"]).
 #
 # `inject: [webServer, shell]` matters: profile activation is

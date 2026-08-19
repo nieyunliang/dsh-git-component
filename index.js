@@ -82,7 +82,7 @@ export default {
       }
       // porcelain v1: XY path where X is the index slot and Y the worktree slot;
       // either slot may be a space (unmodified), so both classes must include ' '.
-      const statusRe = /^([ A-Z?!T])([ A-Z?!T]) (.*)$/
+      const statusRe = /^([ A-Z?!T])([ A-Z?!T]) ([\s\S]*)$/
       for (; i < records.length; i++) {
         const rec = records[i]
         const m = statusRe.exec(rec)
@@ -279,6 +279,6 @@ export default {
       } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
     })
 
-    console.log('[git-component] host plugin active: /git-component/status /git-component/diff /git-component/commit /git-component/push /git-component/automessage')
+    console.log('[git-component] host plugin active: /git-component/status /git-component/diff /git-component/commit /git-component/push /git-component/stage /git-component/automessage')
   },
 }

@@ -6,11 +6,12 @@ window.__ModuleLoader__.load({
 		var React = require("react");
 
 		const CSS = `
-.dsh-git-componentanel-root, .dsh-git-componentanel-root * { box-sizing: border-box; }
-.dsh-git-componentanel-root {
-  position: fixed; top: 0; right: 14px; bottom: auto;
-  width: 376px;
-  min-height: 240px;
+.dsh-git-component-panel-root, .dsh-git-component-panel-root * { box-sizing: border-box; }
+.dsh-git-component-panel-root {
+  --dsh-git-component-font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --dsh-git-component-font-mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  position: fixed; top: 90px; right: 14px; bottom: auto;
+  width: min(376px, calc(100vw - 28px));
   max-height: calc(100vh - 108px);
   z-index: 2147483647; pointer-events: auto;
   display: flex; flex-direction: column;
@@ -18,124 +19,137 @@ window.__ModuleLoader__.load({
   /* 跟随主题：浅色模式纯白（rgb(255,255,255)），深色模式近黑（rgb(21,21,23)） */
   background: var(--dsw-alias-bg-base, #ffffff);
   color: var(--dsw-alias-label-primary, #16181d);
+  border: 1px solid var(--dsw-alias-label-primary, #16181d);
   border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 18%, transparent);
   box-shadow:
     0 1px 3px -1px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 6%, transparent),
     0 6px 16px -8px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 10%, transparent),
     0 14px 32px -16px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 8%, transparent);
   overflow: hidden;
-  font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-  animation: dsh-git-componentanel-in 0.22s cubic-bezier(0.21, 1.02, 0.73, 1);
+  font: 14px/1.5 var(--dsh-git-component-font-sans);
+  animation: dsh-git-component-panel-in 0.22s cubic-bezier(0.21, 1.02, 0.73, 1);
 }
-.dsh-git-componentanel-root.has-diff {
+.dsh-git-component-panel-root.has-diff {
   width: min(720px, calc(100vw - 28px));
 }
-@keyframes dsh-git-componentanel-in {
+@keyframes dsh-git-component-panel-in {
   from { opacity: 0; transform: translateX(16px) scale(0.98); }
   to { opacity: 1; transform: none; }
 }
-.dsh-git-componentanel-header {
+.dsh-git-component-panel-header {
   display: flex; align-items: center; gap: 8px;
   padding: 12px 14px 10px;
   border-bottom: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
   background: transparent;
 }
-.dsh-git-componentanel-logo {
+.dsh-git-component-panel-logo {
   display: inline-flex; align-items: center; justify-content: center;
   color: var(--dsw-alias-brand-primary, #2563eb);
   background: color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 14%, transparent);
   border: 1px solid color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 20%, transparent);
   border-radius: 8px; padding: 3px 6px;
 }
-.dsh-git-componentanel-branch {
+.dsh-git-component-panel-branch {
   display: inline-flex; align-items: center; gap: 5px;
-  font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  font-family: var(--dsh-git-component-font-mono);
   font-size: 12px; color: var(--dsw-alias-label-secondary, #5b6472);
   background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 5%, transparent);
   border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent);
   border-radius: 999px; padding: 2px 10px;
   max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.dsh-git-componentanel-branch .dsh-git-componentanel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dsw-alias-state-success-primary, #16a34a); flex: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--dsw-alias-state-success-primary, #16a34a) 18%, transparent); }
-.dsh-git-componentanel-branch .dsh-git-componentanel-dot.clean { background: var(--dsw-alias-label-secondary, #5b6472); box-shadow: none; }
-.dsh-git-componentanel-icobtn {
+.dsh-git-component-panel-branch .dsh-git-component-panel-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--dsw-alias-state-success-primary, #15803d); flex: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--dsw-alias-state-success-primary, #15803d) 18%, transparent); }
+.dsh-git-component-panel-branch .dsh-git-component-panel-dot.clean { background: var(--dsw-alias-label-secondary, #5b6472); box-shadow: none; }
+.dsh-git-component-panel-icobtn {
   border: none; background: transparent; color: var(--dsw-alias-label-secondary, #5b6472);
   width: 26px; height: 26px; border-radius: 8px; cursor: pointer; font-size: 14px; line-height: 1;
-  display: inline-flex; align-items: center; justify-content: center;
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
   transition: background 0.12s ease, color 0.12s ease;
 }
-.dsh-git-componentanel-icobtn:hover { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); color: var(--dsw-alias-label-primary, #16181d); }
-.dsh-git-componentanel-icobtn.loading { animation: dsh-git-componentanel-spin 0.9s linear infinite; }
-@keyframes dsh-git-componentanel-spin { to { transform: rotate(360deg); } }
-.dsh-git-componentanel-icobtn:disabled { opacity: 0.45; cursor: default; }
-.dsh-git-componentanel-body {
+.dsh-git-component-panel-icobtn:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
+  outline-offset: 2px;
+}
+.dsh-git-component-panel-icobtn:hover { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); color: var(--dsw-alias-label-primary, #16181d); }
+.dsh-git-component-panel-icobtn.loading { animation: dsh-git-component-panel-spin 0.9s linear infinite; }
+@keyframes dsh-git-component-panel-spin { to { transform: rotate(360deg); } }
+.dsh-git-component-panel-icobtn:disabled { opacity: 0.45; cursor: default; }
+.dsh-git-component-panel-body {
   flex: 1; min-height: 0; overflow-y: auto; padding: 8px 10px 10px;
   display: flex; flex-direction: column; gap: 10px;
 }
-.dsh-git-componentanel-body.has-diff {
+.dsh-git-component-panel-body.has-diff {
   flex-direction: row;
   align-items: stretch;
   overflow: hidden;
 }
-.dsh-git-componentanel-files {
+.dsh-git-component-panel-files {
   flex: 0 0 190px; min-width: 0;
   display: flex; flex-direction: column; gap: 10px;
   overflow-y: auto; padding-right: 2px;
 }
-.dsh-git-componentanel-body::-webkit-scrollbar { width: 8px; }
-.dsh-git-componentanel-body::-webkit-scrollbar-thumb {
+.dsh-git-component-panel-body::-webkit-scrollbar { width: 8px; }
+.dsh-git-component-panel-body::-webkit-scrollbar-thumb {
   background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 16%, transparent);
   border-radius: 8px; border: 2px solid transparent; background-clip: content-box;
 }
-.dsh-git-componentanel-files::-webkit-scrollbar { width: 8px; }
-.dsh-git-componentanel-files::-webkit-scrollbar-thumb {
+.dsh-git-component-panel-files::-webkit-scrollbar { width: 8px; }
+.dsh-git-component-panel-files::-webkit-scrollbar-thumb {
   background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 16%, transparent);
   border-radius: 8px; border: 2px solid transparent; background-clip: content-box;
 }
-.dsh-git-componentanel-section-title {
+.dsh-git-component-panel-section-title {
   display: flex; align-items: center; gap: 6px;
   font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
   color: var(--dsw-alias-label-secondary, #5b6472);
   margin: 2px 2px 4px;
 }
-.dsh-git-componentanel-section-title .dsh-git-componentanel-count {
-  font-family: ui-monospace, Menlo, Consolas, monospace; font-weight: 700; font-size: 10px;
+.dsh-git-component-panel-section-title .dsh-git-component-panel-count {
+  font-family: var(--dsh-git-component-font-mono); font-weight: 700; font-size: 10px;
   color: var(--dsw-alias-label-secondary, #5b6472);
   background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 6%, transparent);
   border-radius: 999px; padding: 0 6px;
 }
-.dsh-git-componentanel-row {
+.dsh-git-component-panel-row {
   display: flex; align-items: center; gap: 8px;
   padding: 5px 6px; border-radius: 9px; cursor: pointer;
   transition: background 0.1s ease;
-  min-width: 0;
+  min-width: 0; width: 100%;
+  border: none; background: transparent; appearance: none;
+  font: inherit; color: inherit; text-align: left;
+  content-visibility: auto; contain-intrinsic-size: 34px;
 }
-.dsh-git-componentanel-row:hover { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 6%, transparent); }
-.dsh-git-componentanel-row.active { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 9%, transparent); }
-.dsh-git-componentanel-badge {
+.dsh-git-component-panel-row:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
+  outline-offset: -2px;
+}
+.dsh-git-component-panel-row:hover { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 6%, transparent); }
+.dsh-git-component-panel-row.active { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 9%, transparent); }
+.dsh-git-component-panel-badge {
   flex: none; width: 20px; height: 20px; border-radius: 6px;
   display: inline-flex; align-items: center; justify-content: center;
-  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11px; font-weight: 700;
+  font-family: var(--dsh-git-component-font-mono); font-size: 11px; font-weight: 700;
   background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 7%, transparent);
   color: var(--dsw-alias-label-secondary, #5b6472);
 }
-.dsh-git-componentanel-badge.staged {
-  color: var(--dsw-alias-state-success-primary, #16a34a);
+.dsh-git-component-panel-badge.staged {
+  color: #166534;
   background: color-mix(in srgb, var(--dsw-alias-state-success-primary, #16a34a) 13%, transparent);
 }
-.dsh-git-componentanel-badge.unstaged {
-  color: var(--dsw-alias-state-warn-primary, #d97706);
+.dsh-git-component-panel-badge.unstaged {
+  color: #92400e;
   background: color-mix(in srgb, var(--dsw-alias-state-warn-primary, #d97706) 13%, transparent);
 }
-.dsh-git-componentanel-path {
-  font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+.dsh-git-component-panel-path {
+  font-family: var(--dsh-git-component-font-mono);
   font-size: 12px; color: var(--dsw-alias-label-primary, #16181d);
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0;
 }
-.dsh-git-componentanel-path .dsh-git-componentanel-old { color: var(--dsw-alias-label-secondary, #5b6472); text-decoration: line-through; }
-.dsh-git-componentanel-caret { color: var(--dsw-alias-label-secondary, #5b6472); font-size: 10px; flex: none; transition: transform 0.15s ease; }
-.dsh-git-componentanel-row.open .dsh-git-componentanel-caret { transform: rotate(90deg); }
-.dsh-git-componentanel-diff {
+.dsh-git-component-panel-path .dsh-git-component-panel-old { color: var(--dsw-alias-label-secondary, #5b6472); text-decoration: line-through; }
+.dsh-git-component-panel-caret { color: var(--dsw-alias-label-secondary, #5b6472); font-size: 10px; flex: none; transition: transform 0.15s ease; }
+.dsh-git-component-panel-row.open .dsh-git-component-panel-caret { transform: rotate(90deg); }
+.dsh-git-component-panel-diff {
   border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent);
   border-radius: 12px; overflow: hidden;
   /* flex 压缩陷阱：body 是 flex column，overflow 非 visible 的 flex 子项
@@ -144,7 +158,7 @@ window.__ModuleLoader__.load({
   flex: none;
   background: transparent;
 }
-.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-diff {
+.dsh-git-component-panel-body.has-diff .dsh-git-component-panel-diff {
   flex: 1 1 auto;
   min-width: 0;
   min-height: 0;
@@ -152,103 +166,120 @@ window.__ModuleLoader__.load({
   flex-direction: column;
   overflow: hidden;
 }
-.dsh-git-componentanel-diff-head {
+.dsh-git-component-panel-diff-head {
   display: flex; align-items: center; justify-content: space-between; gap: 8px;
   padding: 6px 10px; font-size: 11px; color: var(--dsw-alias-label-secondary, #5b6472);
-  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-family: var(--dsh-git-component-font-mono);
   border-bottom: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
   background: transparent;
 }
-.dsh-git-componentanel-diff-path { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dsh-git-componentanel-diff-pre {
+.dsh-git-component-panel-diff-path { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dsh-git-component-panel-diff-pre {
   margin: 0; padding: 8px 0; max-height: 190px; overflow: auto;
-  font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  font-family: var(--dsh-git-component-font-mono);
   font-size: 11.5px; line-height: 1.55; tab-size: 4;
 }
-.dsh-git-componentanel-diff-pre::-webkit-scrollbar { width: 8px; height: 8px; }
-.dsh-git-componentanel-diff-pre::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 16%, transparent); border-radius: 8px; }
-.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-diff-pre {
+.dsh-git-component-panel-diff-pre::-webkit-scrollbar { width: 8px; height: 8px; }
+.dsh-git-component-panel-diff-pre::-webkit-scrollbar-thumb { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 16%, transparent); border-radius: 8px; }
+.dsh-git-component-panel-body.has-diff .dsh-git-component-panel-diff-pre {
   flex: 1 1 auto;
   max-height: none;
   min-height: 0;
 }
-.dsh-git-componentanel-dl { display: block; padding: 0 10px; white-space: pre; color: var(--dsw-alias-label-primary, #16181d); }
-.dsh-git-componentanel-dl.add { background: color-mix(in srgb, var(--dsw-alias-state-success-primary, #16a34a) 11%, transparent); color: var(--dsw-alias-state-success-primary, #16a34a); }
-.dsh-git-componentanel-dl.del { background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #dc2626) 11%, transparent); color: var(--dsw-alias-state-error-primary, #dc2626); }
-.dsh-git-componentanel-dl.hunk { color: var(--dsw-alias-brand-primary, #2563eb); background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 4%, transparent); }
-.dsh-git-componentanel-dl.meta { color: var(--dsw-alias-label-secondary, #5b6472); font-style: italic; }
-.dsh-git-componentanel-empty {
+.dsh-git-component-panel-dl { display: block; padding: 0 10px; white-space: pre; color: var(--dsw-alias-label-primary, #16181d); }
+.dsh-git-component-panel-dl.add { background: color-mix(in srgb, var(--dsw-alias-state-success-primary, #16a34a) 11%, transparent); color: #166534; }
+.dsh-git-component-panel-dl.del { background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #dc2626) 11%, transparent); color: #b91c1c; }
+.dsh-git-component-panel-dl.hunk { color: var(--dsw-alias-brand-primary, #2563eb); background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 4%, transparent); }
+.dsh-git-component-panel-dl.meta { color: var(--dsw-alias-label-secondary, #5b6472); font-style: italic; }
+.dsh-git-component-panel-empty {
   text-align: center; color: var(--dsw-alias-label-secondary, #5b6472);
   padding: 26px 12px; font-size: 12.5px;
 }
-.dsh-git-componentanel-empty .dsh-git-componentanel-big { font-size: 22px; margin-bottom: 6px; }
-.dsh-git-componentanel-errorbox {
+.dsh-git-component-panel-empty .dsh-git-component-panel-big { font-size: 22px; margin-bottom: 6px; }
+.dsh-git-component-panel-errorbox {
   border: 1px solid color-mix(in srgb, var(--dsw-alias-state-error-primary, #dc2626) 32%, transparent);
   background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #dc2626) 9%, transparent);
   color: var(--dsw-alias-state-error-primary, #dc2626);
   border-radius: 12px; padding: 10px 12px; font-size: 12px; line-height: 1.5;
   word-break: break-word;
 }
-.dsh-git-componentanel-commit {
+.dsh-git-component-panel-commit {
   border-top: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
   padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 8px;
   background: transparent;
 }
-.dsh-git-componentanel-textarea {
+.dsh-git-component-panel-commit-hint {
+  font-size: 11px; line-height: 1.4; color: var(--dsw-alias-label-secondary, #5b6472);
+  padding: 0 2px;
+}
+.dsh-git-component-panel-textarea {
   width: 100%; resize: none; min-height: 56px; max-height: 120px;
+  border: 1px solid var(--dsw-alias-label-primary, #16181d);
   border: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 12%, transparent);
   border-radius: 12px;
+  background: var(--dsw-alias-bg-base, #ffffff);
   background: color-mix(in srgb, var(--dsw-alias-bg-base, #ffffff) 60%, transparent);
   backdrop-filter: blur(12px);
   color: var(--dsw-alias-label-primary, #16181d);
   padding: 8px 11px; font: 12.5px/1.5 inherit; outline: none;
   transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
 }
-.dsh-git-componentanel-textarea:focus {
+.dsh-git-component-panel-textarea:focus {
   border-color: color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 70%, transparent);
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 20%, transparent);
+  background: var(--dsw-alias-bg-base, #ffffff);
   background: color-mix(in srgb, var(--dsw-alias-bg-base, #ffffff) 70%, transparent);
 }
-.dsh-git-componentanel-textarea::placeholder { color: var(--dsw-alias-label-secondary, #5b6472); }
-.dsh-git-componentanel-btns { display: flex; gap: 8px; }
-.dsh-git-componentanel-btn {
+.dsh-git-component-panel-textarea::placeholder { color: var(--dsw-alias-label-secondary, #5b6472); }
+.dsh-git-component-panel-btns { display: flex; gap: 8px; }
+.dsh-git-component-panel-btn {
   flex: 1; min-height: 34px; border-radius: 11px; border: 1px solid transparent; cursor: pointer;
   padding: 6px 10px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em;
   display: inline-flex; align-items: center; justify-content: center;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
   transition: filter 0.12s ease, background 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
 }
-.dsh-git-componentanel-btn:disabled { opacity: 0.45; cursor: default; }
-.dsh-git-componentanel-btn.primary {
-  background: linear-gradient(180deg, #3b82f6, #1d4ed8);
+.dsh-git-component-panel-btn:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
+  outline-offset: 2px;
+}
+.dsh-git-component-panel-btn:disabled { opacity: 0.45; cursor: default; }
+.dsh-git-component-panel-btn.primary {
+  background: linear-gradient(180deg, #2563eb, #1d4ed8);
   color: #fff;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), 0 4px 14px -6px rgba(29, 78, 216, 0.55);
 }
-.dsh-git-componentanel-btn.primary:not(:disabled):hover { filter: brightness(1.08); }
-.dsh-git-componentanel-btn.primary:not(:disabled):active { filter: brightness(0.94); }
-.dsh-git-componentanel-btn.outline {
+.dsh-git-component-panel-btn.primary:not(:disabled):hover { filter: brightness(1.08); }
+.dsh-git-component-panel-btn.primary:not(:disabled):active { filter: brightness(0.94); }
+.dsh-git-component-panel-btn.outline {
   background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent);
   border-color: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 22%, transparent);
   color: var(--dsw-alias-label-primary, #16181d);
 }
-.dsh-git-componentanel-btn.outline:not(:disabled):hover {
-  border-color: #3b82f6;
-  color: #3b82f6;
-  background: color-mix(in srgb, #3b82f6 12%, transparent);
+.dsh-git-component-panel-btn.outline:not(:disabled):hover {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: color-mix(in srgb, #2563eb 12%, transparent);
 }
-.dsh-git-componentanel-btn.outline:not(:disabled):active { filter: brightness(0.94); }
-.dsh-git-componentanel-footer { display: flex; align-items: center; gap: 8px; min-height: 22px; }
-.dsh-git-componentanel-push {
+.dsh-git-component-panel-btn.outline:not(:disabled):active { filter: brightness(0.94); }
+.dsh-git-component-panel-footer { display: flex; align-items: center; gap: 8px; min-height: 22px; }
+.dsh-git-component-panel-push {
   flex: none; border: none; background: transparent; cursor: pointer;
   color: var(--dsw-alias-label-secondary, #5b6472); font-size: 12px; font-weight: 600;
   padding: 2px 4px; border-radius: 6px;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
 }
-.dsh-git-componentanel-push:hover { color: var(--dsw-alias-brand-primary, #2563eb); }
-.dsh-git-componentanel-push:disabled { opacity: 0.5; cursor: default; }
-.dsh-git-componentanel-notice { flex: 1; font-size: 12px; line-height: 1.45; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dsh-git-componentanel-notice.ok { color: var(--dsw-alias-state-success-primary, #16a34a); }
-.dsh-git-componentanel-notice.err { color: var(--dsw-alias-state-error-primary, #dc2626); }
-.dsh-git-componentanel-notice.info { color: var(--dsw-alias-label-secondary, #5b6472); }
-.dsh-git-componentanel-root.collapsed {
+.dsh-git-component-panel-push:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
+  outline-offset: 2px;
+}
+.dsh-git-component-panel-push:hover { color: var(--dsw-alias-brand-primary, #2563eb); }
+.dsh-git-component-panel-push:disabled { opacity: 0.5; cursor: default; }
+.dsh-git-component-panel-notice { flex: 1; font-size: 12px; line-height: 1.45; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dsh-git-component-panel-notice.ok { color: var(--dsw-alias-state-success-primary, #15803d); }
+.dsh-git-component-panel-notice.err { color: var(--dsw-alias-state-error-primary, #dc2626); }
+.dsh-git-component-panel-notice.info { color: var(--dsw-alias-label-secondary, #5b6472); }
+.dsh-git-component-panel-root.collapsed {
   transform: none;
   width: 42px; height: 42px;
   background: var(--dsw-alias-bg-base, #ffffff);
@@ -262,84 +293,128 @@ window.__ModuleLoader__.load({
   padding: 0;
   transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
 }
-.dsh-git-componentanel-root.collapsed:hover {
+.dsh-git-component-panel-root.collapsed:hover {
   transform: translateY(-1px);
   border-color: color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 45%, transparent);
   box-shadow:
     0 2px 4px -1px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 8%, transparent),
     0 10px 24px -10px color-mix(in srgb, color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 35%, #000000) 16%, transparent);
 }
-.dsh-git-componentanel-tab-icon {
+.dsh-git-component-panel-root.collapsed:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
+  outline-offset: 2px;
+}
+.dsh-git-component-panel-tab-icon {
   display: inline-flex;
   color: var(--dsw-alias-label-secondary, #5b6472);
   transition: color 0.12s ease, transform 0.12s ease;
 }
-.dsh-git-componentanel-root.collapsed:hover .dsh-git-componentanel-tab-icon { color: var(--dsw-alias-brand-primary, #2563eb); transform: scale(1.1); }
-.dsh-git-componentanel-tab-badge {
+.dsh-git-component-panel-root.collapsed:hover .dsh-git-component-panel-tab-icon { color: var(--dsw-alias-brand-primary, #2563eb); transform: scale(1.1); }
+.dsh-git-component-panel-tab-badge {
   position: absolute; top: -4px; right: -4px;
   min-width: 16px; height: 16px; padding: 0 4px;
   border-radius: 999px;
   background: var(--dsw-alias-state-error-primary, #dc2626);
   color: #fff;
-  font-family: ui-monospace, Menlo, Consolas, monospace;
+  font-family: var(--dsh-git-component-font-mono);
   font-size: 10px; font-weight: 700; line-height: 16px;
   display: inline-flex; align-items: center; justify-content: center;
   box-shadow: 0 0 0 2px var(--dsw-alias-bg-base, #ffffff);
   pointer-events: none;
 }
-.dsh-git-componentanel-diff-head { gap: 2px; }
-.dsh-git-componentanel-diff-head .dsh-git-componentanel-icobtn { width: 22px; height: 22px; font-size: 12px; flex: none; }
-.dsh-git-componentanel-hunk-head {
+.dsh-git-component-panel-diff-head { gap: 2px; }
+.dsh-git-component-panel-diff-head .dsh-git-component-panel-icobtn { width: 22px; height: 22px; font-size: 12px; flex: none; }
+.dsh-git-component-panel-hunk-head {
   display: flex; align-items: center; gap: 6px;
   padding: 3px 10px; cursor: pointer; user-select: none;
-  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 11.5px;
+  font-family: var(--dsh-git-component-font-mono); font-size: 11.5px;
   color: var(--dsw-alias-brand-primary, #2563eb);
   background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 4%, transparent);
   border-top: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent);
+  border-left: none; border-right: none; width: 100%; text-align: left; appearance: none;
 }
-.dsh-git-componentanel-hunk-head:hover { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); }
-.dsh-git-componentanel-hunk-caret { font-size: 9px; flex: none; }
-.dsh-git-componentanel-hunk-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.dsh-git-componentanel-diff-split { display: flex; flex-direction: column; }
-.dsh-git-componentanel-split-cols { display: flex; border-top: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); }
-.dsh-git-componentanel-split-col { flex: 1; min-width: 0; max-height: 260px; overflow: auto; }
-.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-diff-split {
+.dsh-git-component-panel-hunk-head:focus-visible {
+  outline: 2px solid var(--dsw-alias-brand-primary, #2563eb);
+  outline-offset: -2px;
+}
+.dsh-git-component-panel-hunk-head:hover { background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); }
+.dsh-git-component-panel-hunk-caret { font-size: 9px; flex: none; }
+.dsh-git-component-panel-hunk-label { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dsh-git-component-panel-diff-split { display: flex; flex-direction: column; }
+.dsh-git-component-panel-split-cols { display: flex; border-top: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 8%, transparent); }
+.dsh-git-component-panel-split-col { flex: 1; min-width: 0; max-height: 260px; overflow: auto; }
+.dsh-git-component-panel-body.has-diff .dsh-git-component-panel-diff-split {
   flex: 1 1 auto;
   min-height: 0;
   overflow: auto;
 }
-.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-split-cols,
-.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-split-col {
+.dsh-git-component-panel-body.has-diff .dsh-git-component-panel-split-cols,
+.dsh-git-component-panel-body.has-diff .dsh-git-component-panel-split-col {
   max-height: none;
 }
-.dsh-git-componentanel-body.has-diff .dsh-git-componentanel-split-col {
+.dsh-git-component-panel-body.has-diff .dsh-git-component-panel-split-col {
   overflow: visible;
 }
-.dsh-git-componentanel-split-col + .dsh-git-componentanel-split-col { border-left: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent); }
-.dsh-git-componentanel-split-line {
-  display: flex; font-family: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+.dsh-git-component-panel-split-col + .dsh-git-component-panel-split-col { border-left: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 10%, transparent); }
+.dsh-git-component-panel-split-line {
+  display: flex; font-family: var(--dsh-git-component-font-mono);
   font-size: 11.5px; line-height: 1.55; white-space: pre;
 }
-.dsh-git-componentanel-lineno {
+.dsh-git-component-panel-lineno {
   flex: none; width: 34px; text-align: right; padding: 0 8px 0 4px;
   color: var(--dsw-alias-label-secondary, #5b6472);
   background: color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 3%, transparent);
   border-right: 1px solid color-mix(in srgb, var(--dsw-alias-label-primary, #16181d) 6%, transparent);
   user-select: none;
 }
-.dsh-git-componentanel-linebody { flex: 1; min-width: 0; padding: 0 8px; overflow: hidden; text-overflow: ellipsis; }
-.dsh-git-componentanel-split-line.add { background: color-mix(in srgb, var(--dsw-alias-state-success-primary, #16a34a) 11%, transparent); }
-.dsh-git-componentanel-split-line.del { background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #dc2626) 11%, transparent); }
-.dsh-git-componentanel-split-line.empty { background: transparent; }
-.dsh-git-componentanel-split-line.meta { color: var(--dsw-alias-label-secondary, #5b6472); font-style: italic; }
-.dsh-git-componentanel-tok.comment { color: var(--dsw-alias-label-secondary, #5b6472); font-style: italic; }
-.dsh-git-componentanel-tok.string { color: #0f9d58; }
-.dsh-git-componentanel-tok.keyword { color: #1a56db; font-weight: 600; }
-.dsh-git-componentanel-tok.number { color: #b45309; }
-body[data-ds-dark-theme] .dsh-git-componentanel-tok.string { color: #4ade80; }
-body[data-ds-dark-theme] .dsh-git-componentanel-tok.keyword { color: #7aa2f7; }
-body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
+.dsh-git-component-panel-linebody { flex: 1; min-width: 0; padding: 0 8px; overflow: hidden; text-overflow: ellipsis; }
+.dsh-git-component-panel-split-line.add { background: color-mix(in srgb, var(--dsw-alias-state-success-primary, #16a34a) 11%, transparent); }
+.dsh-git-component-panel-split-line.del { background: color-mix(in srgb, var(--dsw-alias-state-error-primary, #dc2626) 11%, transparent); }
+.dsh-git-component-panel-split-line.empty { background: transparent; }
+.dsh-git-component-panel-split-line.mod { background: color-mix(in srgb, var(--dsw-alias-brand-primary, #2563eb) 9%, transparent); }
+.dsh-git-component-panel-split-line.meta { color: var(--dsw-alias-label-secondary, #5b6472); font-style: italic; }
+.dsh-git-component-panel-tok.comment { color: var(--dsw-alias-label-secondary, #5b6472); font-style: italic; }
+.dsh-git-component-panel-tok.string { color: #0b7a3b; }
+.dsh-git-component-panel-tok.keyword { color: #1a56db; font-weight: 600; }
+.dsh-git-component-panel-tok.number { color: #b45309; }
+body[data-ds-dark-theme] .dsh-git-component-panel-tok.string { color: #4ade80; }
+body[data-ds-dark-theme] .dsh-git-component-panel-tok.keyword { color: #7aa2f7; }
+body[data-ds-dark-theme] .dsh-git-component-panel-tok.number { color: #fbbf24; }
+@media (pointer: coarse) {
+  .dsh-git-component-panel-icobtn { width: 44px; height: 44px; }
+  .dsh-git-component-panel-btn { min-height: 44px; }
+  .dsh-git-component-panel-push { min-height: 44px; padding: 8px 12px; }
+  .dsh-git-component-panel-row { min-height: 44px; }
+  .dsh-git-component-panel-hunk-head { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dsh-git-component-panel-root,
+  .dsh-git-component-panel-icobtn,
+  .dsh-git-component-panel-row,
+  .dsh-git-component-panel-caret,
+  .dsh-git-component-panel-textarea,
+  .dsh-git-component-panel-btn,
+  .dsh-git-component-panel-push,
+  .dsh-git-component-panel-tab-icon,
+  .dsh-git-component-panel-root.collapsed {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+.dsh-git-component-panel-root,
+.dsh-git-component-panel-root button,
+.dsh-git-component-panel-row,
+.dsh-git-component-panel-hunk-head {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.dsh-git-component-panel-body,
+.dsh-git-component-panel-files,
+.dsh-git-component-panel-diff-pre,
+.dsh-git-component-panel-split-col {
+  overscroll-behavior: contain;
+}
 `;
 
 		function injectCss(css) {
@@ -357,6 +432,47 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 			h("circle", { cx: "6", cy: "18", r: "3" }),
 			h("path", { d: "M18 9a9 9 0 0 1-9 9" }),
 		);
+
+		const Icon = (props) => {
+			const { children, ...rest } = props;
+			return h("svg", Object.assign({
+				viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 2,
+				strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": true, width: 14, height: 14
+			}, rest), children);
+		};
+		const RefreshIcon = (props) => h(Icon, Object.assign({}, props),
+			h("path", { d: "M21 12a9 9 0 1 1-2.64-6.36" }),
+			h("polyline", { points: "23 4 23 10 17 10" }),
+		);
+		const CollapseIcon = (props) => h(Icon, Object.assign({}, props),
+			h("polyline", { points: "13 17 18 12 13 7" }),
+			h("polyline", { points: "6 17 11 12 6 7" }),
+		);
+		const CloseIcon = (props) => h(Icon, Object.assign({}, props),
+			h("line", { x1: "18", y1: "6", x2: "6", y2: "18" }),
+			h("line", { x1: "6", y1: "6", x2: "18", y2: "18" }),
+		);
+		const SplitIcon = (props) => h(Icon, Object.assign({}, props),
+			h("rect", { x: "3", y: "3", width: "18", height: "18", rx: "2" }),
+			h("line", { x1: "12", y1: "3", x2: "12", y2: "21" }),
+		);
+		const ListIcon = (props) => h(Icon, Object.assign({}, props),
+			h("line", { x1: "8", y1: "6", x2: "21", y2: "6" }),
+			h("line", { x1: "8", y1: "12", x2: "21", y2: "12" }),
+			h("line", { x1: "8", y1: "18", x2: "21", y2: "18" }),
+			h("line", { x1: "3", y1: "6", x2: "3.01", y2: "6" }),
+			h("line", { x1: "3", y1: "12", x2: "3.01", y2: "12" }),
+			h("line", { x1: "3", y1: "18", x2: "3.01", y2: "18" }),
+		);
+		const StageIcon = (props) => {
+			const { unstage, ...rest } = props;
+			return h(Icon, Object.assign({}, rest),
+				unstage ? h("path", { d: "M3 7v6h6" }) : h("line", { x1: "12", y1: "5", x2: "12", y2: "19" }),
+				unstage ? h("path", { d: "M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" }) : h("line", { x1: "5", y1: "12", x2: "19", y2: "12" }),
+			);
+		};
+		const CaretRightIcon = (props) => h(Icon, Object.assign({}, props), h("polyline", { points: "9 18 15 12 9 6" }));
+		const ChevronDownIcon = (props) => h(Icon, Object.assign({}, props), h("polyline", { points: "6 9 12 15 18 9" }));
 
 		const call = async (path, body) => {
 			const opt = body === undefined ? {} : { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) };
@@ -497,11 +613,31 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 		/** Align one hunk's lines into left/right pairs for side-by-side view. */
 		function sideBySidePairs(hunk) {
 			const pairs = [];
+			let dels = [];
+			let adds = [];
+			const flush = () => {
+				const n = Math.max(dels.length, adds.length);
+				for (let i = 0; i < n; i++) {
+					const left = dels[i] === undefined ? null : dels[i];
+					const right = adds[i] === undefined ? null : adds[i];
+					pairs.push({
+						left: left,
+						right: right,
+						kind: left !== null && right !== null ? "mod" : (left !== null ? "del" : "add"),
+					});
+				}
+				dels = [];
+				adds = [];
+			};
 			for (const ln of hunk.lines) {
-				if (ln.kind === "del") pairs.push({ left: ln.text, right: null, kind: "del" });
-				else if (ln.kind === "add") pairs.push({ left: null, right: ln.text, kind: "add" });
-				else pairs.push({ left: ln.text, right: ln.text, kind: ln.kind });
+				if (ln.kind === "del") dels.push(ln.text);
+				else if (ln.kind === "add") adds.push(ln.text);
+				else {
+					flush();
+					pairs.push({ left: ln.text, right: ln.text, kind: ln.kind });
+				}
 			}
+			flush();
 			return pairs;
 		}
 		// ---- diff helpers: end ----
@@ -523,6 +659,8 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 			const [folded, setFolded] = React.useState({});
 			const [notice, setNotice] = React.useState(null);
 			const alive = React.useRef(true);
+			const diffReqRef = React.useRef(0);
+			const statusReqRef = React.useRef(0);
 
 			const currentSession = currentId ? sessionsById[currentId] : undefined;
 			const recentWs = items.find((w) => w.workspaceId === recentId) || items[0];
@@ -530,28 +668,35 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 
 			const refresh = React.useCallback(async (silent) => {
 				if (!alive.current) return;
+				const reqId = ++statusReqRef.current;
 				if (!silent) setLoading(true);
 				try {
 					const res = await call("/git-component/status?cwd=" + encodeURIComponent(cwd));
-					if (!alive.current) return;
+					if (!alive.current || statusReqRef.current !== reqId) return;
 					if (res && res.ok) {
 						setStatus(res);
 						setError(null);
+						if (res.changes && res.changes.length === 0) {
+							diffReqRef.current++;
+							setDiff(null);
+							setFolded({});
+						}
 					} else {
 						setStatus(null);
 						setError((res && res.error) || "无法读取 Git 状态");
 					}
 				} catch (err) {
-					if (!alive.current) return;
+					if (!alive.current || statusReqRef.current !== reqId) return;
 					setStatus(null);
 					setError("Git 面板调用失败：" + String((err && err.message) || err));
 				} finally {
-					if (alive.current) setLoading(false);
+					if (alive.current && statusReqRef.current === reqId) setLoading(false);
 				}
 			}, [cwd]);
 
 			React.useEffect(() => {
 				alive.current = true;
+				diffReqRef.current++;
 				setDiff(null);
 				setNotice(null);
 				refresh(true);
@@ -561,24 +706,43 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 				return () => { alive.current = false; clearInterval(d); };
 			}, [refresh]);
 
+			React.useEffect(() => {
+				const onKey = (e) => {
+					if (e.key !== "Escape") return;
+					if (diff) {
+						diffReqRef.current++;
+						setDiff(null);
+						return;
+					}
+					const tag = document.activeElement && document.activeElement.tagName;
+					if (tag !== "TEXTAREA" && tag !== "INPUT") setCollapsed(true);
+				};
+				window.addEventListener("keydown", onKey);
+				return () => window.removeEventListener("keydown", onKey);
+			}, [diff]);
+
 			const toggleDiff = async (ch) => {
-				if (diff && diff.path === ch.path && !diff.loading) {
-					setDiff(null);
+				if (diff && diff.path === ch.path) {
+					if (!diff.loading) {
+						diffReqRef.current++;
+						setDiff(null);
+					}
 					return;
 				}
+				const reqId = ++diffReqRef.current;
 				setFolded({});
 				setDiff({ path: ch.path, text: null, error: null, loading: true, st: ch.state, parsed: null });
 				try {
 					const q = "cwd=" + encodeURIComponent(cwd) + "&path=" + encodeURIComponent(ch.path) + "&staged=" + (ch.state === "staged" ? "1" : "0") + "&untracked=" + (ch.state === "untracked" ? "1" : "0");
 					const res = await call("/git-component/diff?" + q);
-					if (!alive.current) return;
+					if (!alive.current || diffReqRef.current !== reqId) return;
 					if (res && res.ok) {
 						setDiff({ path: ch.path, text: res.text, error: null, truncated: !!res.truncated, loading: false, st: ch.state, parsed: parseUnifiedDiff(res.text, 400) });
 					} else {
 						setDiff({ path: ch.path, text: null, error: (res && res.error) || "无法读取差异", loading: false, st: ch.state, parsed: null });
 					}
 				} catch (err) {
-					if (!alive.current) return;
+					if (!alive.current || diffReqRef.current !== reqId) return;
 					setDiff({ path: ch.path, text: null, error: String((err && err.message) || err), loading: false, st: ch.state, parsed: null });
 				}
 			};
@@ -593,6 +757,7 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 					if (!alive.current) return;
 					if (res && res.ok) {
 						setNotice({ kind: "ok", text: (action === "unstage" ? "已取消暂存 " : "已暂存 ") + d.path });
+						diffReqRef.current++;
 						setDiff(null);
 						setFolded({});
 						refresh(true);
@@ -631,6 +796,9 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 					if (!alive.current) return;
 					if (res && res.ok) {
 						setMessage("");
+						diffReqRef.current++;
+						setDiff(null);
+						setFolded({});
 						setNotice({ kind: "ok", text: "已提交" + (res.hash ? " " + res.hash : "") });
 						if (alsoPush) {
 							const pushRes = await call("/git-component/push", { cwd: cwd });
@@ -683,28 +851,33 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 
 			const renderRow = (ch, cls) => {
 				const open = diff && diff.path === ch.path && !diff.loading;
+				const expanded = diff && diff.path === ch.path;
 				const badgeLetter = ch.x === "?" ? "?" : (ch.x !== " " ? ch.x : ch.y);
-				return h("div", {
+				return h("button", {
 						key: ch.path,
-						className: "dsh-git-componentanel-row" + (open ? " open active" : ""),
+						type: "button",
+						className: "dsh-git-component-panel-row" + (open ? " open active" : ""),
 						onClick: () => toggleDiff(ch),
+						onKeyDown: (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleDiff(ch); } },
 						title: "查看差异",
+						"aria-label": "查看差异：" + ch.path,
+						"aria-expanded": expanded ? "true" : "false",
 					},
-					h("span", { className: "dsh-git-componentanel-badge " + cls }, badgeLetter),
-					h("span", { className: "dsh-git-componentanel-path" },
-						ch.oldPath ? h("span", null, h("span", { className: "dsh-git-componentanel-old" }, ch.oldPath), " → ") : null,
+					h("span", { className: "dsh-git-component-panel-badge " + cls }, badgeLetter),
+					h("span", { className: "dsh-git-component-panel-path" },
+						ch.oldPath ? h("span", null, h("span", { className: "dsh-git-component-panel-old" }, ch.oldPath), " → ") : null,
 						ch.path,
 					),
-					h("span", { className: "dsh-git-componentanel-caret" }, "›"),
+					h(CaretRightIcon, { className: "dsh-git-component-panel-caret", width: 10, height: 10 }),
 				);
 			};
 
 			const renderSection = (title, list, cls) => {
 				if (list.length === 0) return null;
-				return h("div", { className: "dsh-git-componentanel-section" },
-					h("div", { className: "dsh-git-componentanel-section-title" },
+				return h("div", { className: "dsh-git-component-panel-section" },
+					h("div", { className: "dsh-git-component-panel-section-title" },
 						h("span", null, title),
-						h("span", { className: "dsh-git-componentanel-count" }, String(list.length)),
+						h("span", { className: "dsh-git-component-panel-count" }, String(list.length)),
 					),
 					list.map((ch) => renderRow(ch, cls)),
 				);
@@ -713,26 +886,28 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 			const renderLineTokens = (text, lang) => {
 				const tokens = tokenizeLine(text, lang);
 				return tokens.map((t, i) =>
-					t.cls === "plain" ? t.text : h("span", { key: i, className: "dsh-git-componentanel-tok " + t.cls }, t.text),
+					t.cls === "plain" ? t.text : h("span", { key: i, className: "dsh-git-component-panel-tok " + t.cls }, t.text),
 				);
 			};
 
 			const renderHunkHead = (hk, hi, key) =>
-				h("div", { key: key, className: "dsh-git-componentanel-hunk-head", onClick: () => toggleHunk(hi), title: "折叠/展开该 hunk" },
-					h("span", { className: "dsh-git-componentanel-hunk-caret" }, folded[hi] ? "▶" : "▼"),
-					h("span", { className: "dsh-git-componentanel-hunk-label" }, "@@ -" + hk.oldStart + "," + hk.oldCount + " +" + hk.newStart + "," + hk.newCount + " @@"),
+				h("button", { key: key, type: "button", className: "dsh-git-component-panel-hunk-head", onClick: () => toggleHunk(hi), title: "折叠/展开该 hunk", "aria-expanded": folded[hi] ? "false" : "true", "aria-label": "折叠/展开 hunk @@ -" + hk.oldStart + "," + hk.oldCount + " +" + hk.newStart + "," + hk.newCount + " @@" },
+					folded[hi]
+						? h(CaretRightIcon, { className: "dsh-git-component-panel-hunk-caret", width: 10, height: 10 })
+						: h(ChevronDownIcon, { className: "dsh-git-component-panel-hunk-caret", width: 10, height: 10 }),
+					h("span", { className: "dsh-git-component-panel-hunk-label" }, "@@ -" + hk.oldStart + "," + hk.oldCount + " +" + hk.newStart + "," + hk.newCount + " @@"),
 				);
 
 			const renderUnified = (d) => {
 				const parsed = d.parsed;
 				const lang = langOf(d.path);
 				const nodes = [];
-				for (const hd of parsed.headers) nodes.push(h("span", { key: "hd" + nodes.length, className: "dsh-git-componentanel-dl meta" }, hd));
+				for (const hd of parsed.headers) nodes.push(h("span", { key: "hd" + nodes.length, className: "dsh-git-component-panel-dl meta" }, hd));
 				parsed.hunks.forEach((hk, hi) => {
 					nodes.push(renderHunkHead(hk, hi, "hh" + hi));
 					if (folded[hi]) return;
 					hk.lines.forEach((ln, i) => {
-						let cls = "dsh-git-componentanel-dl";
+						let cls = "dsh-git-component-panel-dl";
 						if (ln.kind === "add") cls += " add";
 						else if (ln.kind === "del") cls += " del";
 						else if (ln.kind === "meta") cls += " meta";
@@ -741,35 +916,35 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 					});
 				});
 				if (parsed.truncated || d.truncated) {
-					nodes.push(h("span", { key: "trunc", className: "dsh-git-componentanel-dl meta" }, "… 差异过大，已截断"));
+					nodes.push(h("span", { key: "trunc", className: "dsh-git-component-panel-dl meta" }, "… 差异过大，已截断"));
 				}
-				return h("div", { className: "dsh-git-componentanel-diff-pre" }, nodes);
+				return h("div", { className: "dsh-git-component-panel-diff-pre" }, nodes);
 			};
 
 			const renderSplit = (d) => {
 				const parsed = d.parsed;
 				const lang = langOf(d.path);
 				if (parsed.hunks.length === 0) return renderUnified(d);
-				return h("div", { className: "dsh-git-componentanel-diff-split" },
+				return h("div", { className: "dsh-git-component-panel-diff-split" },
 					parsed.hunks.map((hk, hi) => {
 						let oldNo = hk.oldStart;
 						let newNo = hk.newStart;
 						const pairs = sideBySidePairs(hk);
-						return h("div", { key: "h" + hi, className: "dsh-git-componentanel-hunk" },
+						return h("div", { key: "h" + hi, className: "dsh-git-component-panel-hunk" },
 							renderHunkHead(hk, hi),
 							folded[hi]
 								? null
-								: h("div", { className: "dsh-git-componentanel-split-cols" },
-									h("div", { className: "dsh-git-componentanel-split-col" },
-										pairs.map((p, i) => h("div", { key: i, className: "dsh-git-componentanel-split-line" + (p.left === null ? " empty" : " " + p.kind) },
-											h("span", { className: "dsh-git-componentanel-lineno" }, p.left === null ? "" : String(oldNo++)),
-											h("span", { className: "dsh-git-componentanel-linebody" }, p.left === null ? "" : renderLineTokens(p.left, lang)),
+								: h("div", { className: "dsh-git-component-panel-split-cols" },
+									h("div", { className: "dsh-git-component-panel-split-col" },
+										pairs.map((p, i) => h("div", { key: i, className: "dsh-git-component-panel-split-line" + (p.left === null ? " empty" : " " + p.kind) },
+											h("span", { className: "dsh-git-component-panel-lineno" }, p.left === null ? "" : String(oldNo++)),
+											h("span", { className: "dsh-git-component-panel-linebody" }, p.left === null ? "" : renderLineTokens(p.left, lang)),
 										)),
 									),
-									h("div", { className: "dsh-git-componentanel-split-col" },
-										pairs.map((p, i) => h("div", { key: i, className: "dsh-git-componentanel-split-line" + (p.right === null ? " empty" : " " + p.kind) },
-											h("span", { className: "dsh-git-componentanel-lineno" }, p.right === null ? "" : String(newNo++)),
-											h("span", { className: "dsh-git-componentanel-linebody" }, p.right === null ? "" : renderLineTokens(p.right, lang)),
+									h("div", { className: "dsh-git-component-panel-split-col" },
+										pairs.map((p, i) => h("div", { key: i, className: "dsh-git-component-panel-split-line" + (p.right === null ? " empty" : " " + p.kind) },
+											h("span", { className: "dsh-git-component-panel-lineno" }, p.right === null ? "" : String(newNo++)),
+											h("span", { className: "dsh-git-component-panel-linebody" }, p.right === null ? "" : renderLineTokens(p.right, lang)),
 										)),
 									),
 								),
@@ -782,29 +957,31 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 				if (!diff) return null;
 				const st = diff.st;
 				const stageLabel = st === "staged" ? "取消暂存" : "暂存";
-				return h("div", { className: "dsh-git-componentanel-diff" },
-					h("div", { className: "dsh-git-componentanel-diff-head" },
-						h("span", { className: "dsh-git-componentanel-diff-path", title: diff.path }, diff.path),
+				return h("div", { className: "dsh-git-component-panel-diff" },
+					h("div", { className: "dsh-git-component-panel-diff-head" },
+						h("span", { className: "dsh-git-component-panel-diff-path", title: diff.path }, diff.path),
 						h("button", {
-							className: "dsh-git-componentanel-icobtn",
+							type: "button",
+							className: "dsh-git-component-panel-icobtn",
 							onClick: () => setSplitView((v) => !v),
 							disabled: diff.loading || diff.error !== null,
 							title: splitView ? "单栏视图" : "分栏对比",
 							"aria-label": splitView ? "单栏视图" : "分栏对比",
-						}, splitView ? "▤" : "≡"),
+						}, splitView ? h(ListIcon, { width: 12, height: 12 }) : h(SplitIcon, { width: 12, height: 12 })),
 						h("button", {
-							className: "dsh-git-componentanel-icobtn",
+							type: "button",
+							className: "dsh-git-component-panel-icobtn",
 							onClick: () => runStage(diff),
 							disabled: busy !== null || diff.loading || diff.error !== null,
 							title: stageLabel,
 							"aria-label": stageLabel,
-						}, st === "staged" ? "↩" : "+"),
-						h("button", { className: "dsh-git-componentanel-icobtn", onClick: () => setDiff(null), title: "关闭差异", "aria-label": "关闭差异" }, "✕"),
+						}, st === "staged" ? h(StageIcon, { unstage: true, width: 12, height: 12 }) : h(StageIcon, { width: 12, height: 12 })),
+						h("button", { type: "button", className: "dsh-git-component-panel-icobtn", onClick: () => { diffReqRef.current++; setDiff(null); }, title: "关闭差异", "aria-label": "关闭差异" }, h(CloseIcon, { width: 12, height: 12 })),
 					),
 					diff.loading
-						? h("div", { className: "dsh-git-componentanel-empty" }, "读取差异中…")
+						? h("div", { className: "dsh-git-component-panel-empty" }, "读取差异中…")
 						: diff.error
-							? h("div", { className: "dsh-git-componentanel-errorbox" }, diff.error)
+							? h("div", { className: "dsh-git-component-panel-errorbox" }, diff.error)
 							: splitView ? renderSplit(diff) : renderUnified(diff),
 				);
 			};
@@ -812,29 +989,30 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 			const hasDiff = diff !== null && status !== null && total > 0 && !error;
 			let body;
 			if (loading && !status && !error) {
-				body = h("div", { className: "dsh-git-componentanel-body" }, h("div", { className: "dsh-git-componentanel-empty" }, h("div", { className: "dsh-git-componentanel-big" }, "…"), "正在读取 Git 状态"));
+				body = h("div", { className: "dsh-git-component-panel-body" }, h("div", { className: "dsh-git-component-panel-empty" }, h("div", { className: "dsh-git-component-panel-big" }, "…"), "正在读取 Git 状态"));
 			} else if (error) {
-				body = h("div", { className: "dsh-git-componentanel-body" },
-					h("div", { className: "dsh-git-componentanel-errorbox" }, error),
-					h("div", { className: "dsh-git-componentanel-empty" }, "提示：请在侧边栏选择一个 Git 仓库所在的工作区"),
+				body = h("div", { className: "dsh-git-component-panel-body" },
+					h("div", { className: "dsh-git-component-panel-errorbox" }, error),
+					h("button", { type: "button", className: "dsh-git-component-panel-btn outline", onClick: () => refresh(false), disabled: busy !== null, style: { flex: "0 0 auto", alignSelf: "center", minWidth: "96px" } }, "重试"),
+					h("div", { className: "dsh-git-component-panel-empty" }, "提示：请在侧边栏选择一个 Git 仓库所在的工作区"),
 				);
 			} else if (status && total === 0) {
-				body = h("div", { className: "dsh-git-componentanel-body" }, h("div", { className: "dsh-git-componentanel-empty" }, h("div", { className: "dsh-git-componentanel-big" }, "✓"), "工作区干净，没有未提交的更改"));
+				body = h("div", { className: "dsh-git-component-panel-body" }, h("div", { className: "dsh-git-component-panel-empty" }, h("div", { className: "dsh-git-component-panel-big" }, "✓"), "工作区干净，没有未提交的更改"));
 			} else {
 				const sections = [
 					renderSection("已暂存", staged, "staged"),
 					renderSection("未暂存", unstaged, "unstaged"),
 					renderSection("未跟踪", untracked, "untracked"),
 				];
-				body = h("div", { className: "dsh-git-componentanel-body" + (hasDiff ? " has-diff" : "") },
-					hasDiff ? h("div", { className: "dsh-git-componentanel-files" }, sections) : sections,
+				body = h("div", { className: "dsh-git-component-panel-body" + (hasDiff ? " has-diff" : "") },
+					hasDiff ? h("div", { className: "dsh-git-component-panel-files" }, sections) : sections,
 					renderDiff(),
 				);
 			}
 
 			if (collapsed) {
 				return h("div", {
-						className: "dsh-git-componentanel-root collapsed",
+						className: "dsh-git-component-panel-root collapsed",
 						onClick: () => setCollapsed(false),
 						onKeyDown: (e) => { if (e.key === "Enter" || e.key === " ") setCollapsed(false); },
 						role: "button",
@@ -842,8 +1020,8 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 						"aria-label": "展开 Git 面板",
 						title: "展开 Git 面板",
 				},
-				h(BranchIcon, { className: "dsh-git-componentanel-tab-icon", width: 20, height: 20 }),
-				total > 0 ? h("span", { className: "dsh-git-componentanel-tab-badge" }, total > 99 ? "99+" : String(total)) : null,
+				h(BranchIcon, { className: "dsh-git-component-panel-tab-icon", width: 20, height: 20 }),
+				total > 0 ? h("span", { className: "dsh-git-component-panel-tab-badge" }, total > 99 ? "99+" : String(total)) : null,
 			);
 			}
 
@@ -852,56 +1030,61 @@ body[data-ds-dark-theme] .dsh-git-componentanel-tok.number { color: #fbbf24; }
 				: "";
 			const branchName = status ? (status.detached ? "HEAD (游离)" : status.branch) : "—";
 
-			return h("div", { className: "dsh-git-componentanel-root" + (hasDiff ? " has-diff" : "") },
-				h("div", { className: "dsh-git-componentanel-header" },
-					h("span", { className: "dsh-git-componentanel-logo", title: "Git 面板" },
+			return h("div", { className: "dsh-git-component-panel-root" + (hasDiff ? " has-diff" : "") },
+				h("div", { className: "dsh-git-component-panel-header" },
+					h("span", { className: "dsh-git-component-panel-logo", title: "Git 面板" },
 						h(BranchIcon, { width: 14, height: 14 }),
 					),
 					status
-						? h("span", { className: "dsh-git-componentanel-branch", title: status.upstream ? status.upstream : (status.detached ? "HEAD 游离状态" : "无上游分支") },
-								h("span", { className: "dsh-git-componentanel-dot" + (total > 0 ? "" : " clean") }),
+						? h("span", { className: "dsh-git-component-panel-branch", title: status.upstream ? status.upstream : (status.detached ? "HEAD 游离状态" : "无上游分支") },
+								h("span", { className: "dsh-git-component-panel-dot" + (total > 0 ? "" : " clean"), role: "img", "aria-label": total > 0 ? "有未提交更改" : "工作区干净" }),
 								h("span", null, branchName + branchMeta),
 							)
-						: h("span", { className: "dsh-git-componentanel-branch" }, branchName),
+						: h("span", { className: "dsh-git-component-panel-branch" }, branchName),
 					h("div", { style: { flex: 1 } }),
 					h("button", {
-						className: "dsh-git-componentanel-icobtn" + (loading ? " loading" : ""),
+						type: "button",
+						className: "dsh-git-component-panel-icobtn" + (loading ? " loading" : ""),
 						onClick: () => refresh(false),
 						disabled: busy !== null,
 						title: "刷新",
 						"aria-label": "刷新",
-					}, "↻"),
+					}, h(RefreshIcon, { width: 14, height: 14 })),
 					h("button", {
-						className: "dsh-git-componentanel-icobtn",
+						type: "button",
+						className: "dsh-git-component-panel-icobtn",
 						onClick: () => setCollapsed(true),
 						title: "折叠",
 						"aria-label": "折叠",
-					}, "»"),
+					}, h(CollapseIcon, { width: 14, height: 14 })),
 				),
 				body,
-				(status !== null)
-					? h("div", { className: "dsh-git-componentanel-commit" },
+				(status !== null && total > 0)
+					? h("div", { className: "dsh-git-component-panel-commit" },
 							h("textarea", {
-								className: "dsh-git-componentanel-textarea",
+								className: "dsh-git-component-panel-textarea",
 								placeholder: "提交信息（留空将用 AI 自动生成）",
+								"aria-label": "提交信息",
+								name: "commit-message",
 								value: message,
 								rows: 2,
 								disabled: busy !== null,
 								onChange: (e) => setMessage(e.target.value),
 								onKeyDown: (e) => { if ((e.metaKey || e.ctrlKey) && e.key === "Enter") runCommit(false); },
 							}),
-							h("div", { className: "dsh-git-componentanel-btns" },
-								h("button", { className: "dsh-git-componentanel-btn primary", onClick: () => runCommit(false), disabled: !canCommit },
+							h("div", { className: "dsh-git-component-panel-commit-hint" }, "提交会自动暂存所有更改（git add -A）"),
+							h("div", { className: "dsh-git-component-panel-btns" },
+								h("button", { type: "button", className: "dsh-git-component-panel-btn primary", onClick: () => runCommit(false), disabled: !canCommit },
 									busy === "commit" ? "提交中…" : "提交"),
-								h("button", { className: "dsh-git-componentanel-btn outline", onClick: () => runCommit(true), disabled: !canCommit },
+								h("button", { type: "button", className: "dsh-git-component-panel-btn outline", onClick: () => runCommit(true), disabled: !canCommit },
 									busy === "both" ? "提交并推送中…" : "提交并推送"),
 							),
-							h("div", { className: "dsh-git-componentanel-footer" },
-								h("button", { className: "dsh-git-componentanel-push", onClick: runPush, disabled: busy !== null },
+							h("div", { className: "dsh-git-component-panel-footer" },
+								h("button", { type: "button", className: "dsh-git-component-panel-push", onClick: runPush, disabled: busy !== null },
 									busy === "push" ? "推送中…" : "推送"),
 								notice
-									? h("span", { className: "dsh-git-componentanel-notice " + notice.kind, title: notice.text }, notice.text)
-									: h("span", { className: "dsh-git-componentanel-notice info" }, "Ctrl/⌘ + Enter 提交 · 留空 AI 生成"),
+									? h("span", { className: "dsh-git-component-panel-notice " + notice.kind, title: notice.text, role: "status", "aria-live": "polite" }, notice.text)
+									: h("span", { className: "dsh-git-component-panel-notice info" }, "Ctrl/⌘ + Enter 提交 · 留空 AI 生成"),
 							),
 						)
 					: null,
