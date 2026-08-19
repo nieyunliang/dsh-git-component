@@ -234,8 +234,24 @@ export default {
         if (s2) summary += '未暂存的更改:\n' + s2 + '\n'
         const untracked = untrackedRes.exitCode === 0 ? (untrackedRes.stdout && untrackedRes.stdout.text || '').trim() : ''
         if (untracked) summary += '未跟踪的新文件:\n' + untracked + '\n'
-        const diffRes = await runGit(cwd, '-c core.quotepath=false diff HEAD --', { timeoutMs: 20000, stdoutMaxBytes: 768 * 1024, policy })
-        let diffText = (diffRes.exitCode === 0 || diffRes.exitCode === 1) ? (diffRes.stdout && diffRes.stdout.text || '') : ''
+        const stagedDiffRes = await runGit(cwd, '-c core.quotepath=false diff --cached', { timeoutMs: 20000, stdoutMaxBytes: 768 * 1024, policy })
+        const unstagedDiffRes = await runGit(cwd, '-c core.quotepath=false diff', { timeoutMs: 20000, stdoutMaxBytes: 768 * 1024, policy })
+        let diffText = ''
+        const d1 = (stagedDiffRes.exitCode === 0 || stagedDiffRes.exitCode === 1) ? (stagedDiffRes.stdout && stagedDiffRes.stdout.text || '') : ''
+        const d2 = (unstagedDiffRes.exitCode === 0 || unstagedDiffRes.exitCode === 1) ? (unstagedDiffRes.stdout && unstagedDiffRes.stdout.text || '') : ''
+        if (d1.trim()) diffText += d1.trimEnd() + '\n'
+        if (d2.trim()) diffText += d2.trimEnd() + '\n'
+        if (diffText.length <= 4000) {
+          const untrackedFiles = untracked.split('\n').map((f) => f.trim()).filter(Boolean)
+          for (const file of untrackedFiles.slice(0, 5)) {
+            const noIndexRes = await runGit(cwd, '-c core.quotepath=false diff --no-index /dev/null -- ' + sq('./' + file), { timeoutMs: 10000, stdoutMaxBytes: 512 * 1024, policy })
+            if (noIndexRes.exitCode !== 0 && noIndexRes.exitCode !== 1) continue
+            const text = (noIndexRes.stdout && noIndexRes.stdout.text || '').trim()
+            if (!text) continue
+            diffText += text + '\n'
+            if (diffText.length > 4000) break
+          }
+        }
         if (diffText.length > 4000) diffText = diffText.slice(0, 4000) + '\n…（截断）'
         if (diffText.trim()) summary += '\n具体 diff:\n' + diffText
         if (!summary.trim()) return send(res, 200, { ok: false, error: '没有可提交的更改' })
@@ -262,6 +278,7 @@ export default {
           temperature: 0.3,
           maxTokens: 200,
           stop: ['\n'],
+          signal: AbortSignal.timeout(60000),
         })
         for await (const chunk of stream) {
           if (chunk.type === 'text-delta') text += chunk.text
@@ -270,10 +287,13 @@ export default {
             if (reason && (reason.kind === 'error' || reason.kind === 'aborted') && reason.failure) failure = reason.failure
           }
         }
-        if (!text.trim() && failure) {
+        if (failure) {
           return send(res, 200, { ok: false, error: 'AI 生成失败: ' + (failure.message || failure.code || '未知错误') })
         }
-        let msg = text.trim().replace(/^["'`]+|["'`]+$/g, '')
+        let msg = text.trim()
+          .replace(/^[\s"'`「『“‘]+|[\s"'`」』”’]+$/g, '')
+          .replace(/\s+/g, ' ')
+          .trim()
         if (!msg) return send(res, 200, { ok: false, error: 'AI 未能生成提交信息' })
         send(res, 200, { ok: true, message: msg })
       } catch (e) { send(res, 500, { ok: false, error: String((e && e.message) || e) }) }
